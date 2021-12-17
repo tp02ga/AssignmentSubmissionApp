@@ -1,30 +1,36 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  console.log("Hello!");
+  const [jwt, setJwt] = useState("");
 
-  const reqBody = {
-    username: "trevor",
-    password: "asdfasdf",
-  };
+  useEffect(() => {
+    const reqBody = {
+      username: "trevor",
+      password: "asdfasdf",
+    };
 
-  fetch("api/auth/login", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "post",
-    body: JSON.stringify(reqBody),
-  })
-    .then((response) => Promise.all([response.json(), response.headers]))
-    .then(([body, headers]) => {
-      const authValue = headers.get("authorization");
-      console.log(authValue);
-      console.log(body);
-    });
+    fetch("api/auth/login", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "post",
+      body: JSON.stringify(reqBody),
+    })
+      .then((response) => Promise.all([response.json(), response.headers]))
+      .then(([body, headers]) => {
+        setJwt(headers.get("authorization"));
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log(`JWT is: ${jwt}`);
+  }, [jwt]);
 
   return (
     <div className="App">
       <h1>Hello world</h1>
+      <div>JWT Value is {jwt}</div>
     </div>
   );
 }
