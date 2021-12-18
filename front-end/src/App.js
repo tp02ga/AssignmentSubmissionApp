@@ -1,26 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import Dashboard from "./Dashboard";
+import Homepage from "./Homepage";
+import { useLocalState } from "./util/useLocalStorage";
 
 function App() {
-  const [jwt, setJwt] = useState("");
+  const [jwt, setJwt] = useLocalState("", "jwt");
 
   useEffect(() => {
-    const reqBody = {
-      username: "trevor",
-      password: "asdfasdf",
-    };
+    if (!jwt) {
+      const reqBody = {
+        username: "trevor",
+        password: "asdfasdf",
+      };
 
-    fetch("api/auth/login", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "post",
-      body: JSON.stringify(reqBody),
-    })
-      .then((response) => Promise.all([response.json(), response.headers]))
-      .then(([body, headers]) => {
-        setJwt(headers.get("authorization"));
-      });
+      fetch("api/auth/login", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "post",
+        body: JSON.stringify(reqBody),
+      })
+        .then((response) => Promise.all([response.json(), response.headers]))
+        .then(([body, headers]) => {
+          setJwt(headers.get("authorization"));
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -28,10 +34,10 @@ function App() {
   }, [jwt]);
 
   return (
-    <div className="App">
-      <h1>Hello world</h1>
-      <div>JWT Value is {jwt}</div>
-    </div>
+    <Routes>
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/" element={<Homepage />} />
+    </Routes>
   );
 }
 
