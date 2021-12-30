@@ -9,6 +9,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,8 +39,16 @@ public class AssignmentController {
     }
     
     @GetMapping("{assignmentId}")
-    public ResponseEntity<?> getAssignments(@PathVariable Long assignmentId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> getAssignment(@PathVariable Long assignmentId, @AuthenticationPrincipal User user) {
         Optional<Assignment> assignmentOpt = assignmentService.findById(assignmentId);
         return ResponseEntity.ok(assignmentOpt.orElse(new Assignment()));
+    }
+    
+    @PutMapping("{assignmentId}")
+    public ResponseEntity<?> updateAssignment(@PathVariable Long assignmentId, 
+            @RequestBody Assignment assignment,
+            @AuthenticationPrincipal User user) {
+        Assignment updatedAssignment = assignmentService.save(assignment);
+        return ResponseEntity.ok(updatedAssignment);
     }
 }

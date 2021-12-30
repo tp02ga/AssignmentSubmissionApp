@@ -31,4 +31,8 @@ public class AssignmentService {
     public Optional<Assignment> findById(Long assignmentId) {
         return assignmentRepo.findById(assignmentId);
     }
+
+    public Assignment save(Assignment assignment) {
+        return assignmentRepo.save(assignment);
+    }
 }
