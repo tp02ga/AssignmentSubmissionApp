@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
+import AssignmentView from "./AssignmentView";
 import Dashboard from "./Dashboard";
 import Homepage from "./Homepage";
 import Login from "./Login";
@@ -17,6 +18,14 @@ function App() {
         element={
           <PrivateRoute>
             <Dashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/assignments/:id"
+        element={
+          <PrivateRoute>
+            <AssignmentView />
           </PrivateRoute>
         }
       />

@@ -1,5 +1,8 @@
 package com.coderscampus.AssignmentSubmissionApp.service;
 
+import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +24,11 @@ public class AssignmentService {
         return assignmentRepo.save(assignment);
     }
 
+    public Set<Assignment> findByUser (User user) {
+        return assignmentRepo.findByUser(user);
+    }
+
+    public Optional<Assignment> findById(Long assignmentId) {
+        return assignmentRepo.findById(assignmentId);
+    }
 }
