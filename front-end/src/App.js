@@ -7,6 +7,7 @@ import Homepage from "./Homepage";
 import Login from "./Login";
 import PrivateRoute from "./PrivateRoute";
 import { useLocalState } from "./util/useLocalStorage";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const [jwt, setJwt] = useLocalState("", "jwt");
