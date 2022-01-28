@@ -11,10 +11,12 @@ public class Assignment {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
     private String status;
     private String githubUrl;
     private String branch;
     private String codeReviewVideoUrl;
+    
     @ManyToOne(optional = false)
     private User user;
     // TODO: create private User assignedTo;
@@ -54,6 +56,12 @@ public class Assignment {
     }
     public void setUser(User user) {
         this.user = user;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
     
 }
