@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Badge,
   Button,
@@ -26,25 +26,37 @@ const AssignmentView = () => {
   const [assignmentEnums, setAssignmentEnums] = useState([]);
   const [assignmentStatuses, setAssignmentStatuses] = useState([]);
 
-  async function updateAssignment(prop, value) {
+  const prevAssignmentValue = useRef(assignment);
+
+  function updateAssignment(prop, value) {
     const newAssignment = { ...assignment };
     newAssignment[prop] = value;
-    await setAssignment(newAssignment);
+    setAssignment(newAssignment);
   }
 
   function save() {
     // this implies that the student is submitting the assignment for the first time
-    console.log(`Status is ${assignment.status}`);
+
     if (assignment.status === assignmentStatuses[0].status) {
-      console.log("setting new status to be");
       updateAssignment("status", assignmentStatuses[1].status);
+    } else {
+      persist();
     }
+  }
+
+  function persist() {
     ajax(`/api/assignments/${assignmentId}`, "PUT", jwt, assignment).then(
       (assignmentData) => {
         setAssignment(assignmentData);
       }
     );
   }
+  useEffect(() => {
+    if (prevAssignmentValue.current.status !== assignment.status) {
+      persist();
+    }
+    prevAssignmentValue.current = assignment;
+  }, [assignment]);
 
   useEffect(() => {
     ajax(`/api/assignments/${assignmentId}`, "GET", jwt).then(
@@ -55,7 +67,6 @@ const AssignmentView = () => {
         setAssignment(assignmentData);
         setAssignmentEnums(assignmentResponse.assignmentEnums);
         setAssignmentStatuses(assignmentResponse.statusEnums);
-        console.log(assignmentResponse.statusEnums);
       }
     );
   }, []);
@@ -92,7 +103,10 @@ const AssignmentView = () => {
                 }}
               >
                 {assignmentEnums.map((assignmentEnum) => (
-                  <Dropdown.Item eventKey={assignmentEnum.assignmentNum}>
+                  <Dropdown.Item
+                    key={assignmentEnum.assignmentNum}
+                    eventKey={assignmentEnum.assignmentNum}
+                  >
                     {assignmentEnum.assignmentNum}
                   </Dropdown.Item>
                 ))}
