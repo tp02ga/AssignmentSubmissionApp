@@ -17,10 +17,10 @@ public class Assignment {
     private String githubUrl;
     private String branch;
     private String codeReviewVideoUrl;
-
     @ManyToOne(optional = false)
     private User user;
-    // TODO: create private User assignedTo;
+    @ManyToOne
+    private User codeReviewer;
 
     public Long getId() {
         return id;
@@ -76,6 +76,14 @@ public class Assignment {
 
     public void setNumber(Integer number) {
         this.number = number;
+    }
+
+    public User getCodeReviewer() {
+        return codeReviewer;
+    }
+
+    public void setCodeReviewer(User codeReviewer) {
+        this.codeReviewer = codeReviewer;
     }
 
 }
