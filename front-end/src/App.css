@@ -4,3 +4,11 @@
   border-radius: 1em;
   margin-top: 2em;
 }
+
+.assignment-wrapper-title {
+  width: min-content !important;
+  margin-top: -2em !important;
+  margin-bottom: 1em !important;
+  background-color: white !important;
+  white-space: nowrap !important;
+}
