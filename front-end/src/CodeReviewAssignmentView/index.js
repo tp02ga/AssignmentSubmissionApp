@@ -10,11 +10,14 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react/cjs/react.development";
 import ajax from "../Services/fetchService";
+import StatusBadge from "../StatusBadge";
 import { useLocalState } from "../util/useLocalStorage";
 
 const CodeReviewerAssignmentView = () => {
+  const navigate = useNavigate();
   const [jwt, setJwt] = useLocalState("", "jwt");
   const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({
@@ -35,7 +38,6 @@ const CodeReviewerAssignmentView = () => {
   }
 
   function save(status) {
-    // this implies that the student is submitting the assignment for the first time
     if (status && assignment.status !== status) {
       updateAssignment("status", status);
     } else {
@@ -77,9 +79,7 @@ const CodeReviewerAssignmentView = () => {
           {assignment.number ? <h1>Assignment {assignment.number} </h1> : <></>}
         </Col>
         <Col>
-          <Badge pill bg="info" style={{ fontSize: "1em" }}>
-            {assignment.status}
-          </Badge>
+          <StatusBadge text={assignment.status} />
         </Col>
       </Row>
       {assignment ? (
@@ -169,7 +169,7 @@ const CodeReviewerAssignmentView = () => {
             <Button
               size="lg"
               variant="secondary"
-              onClick={() => (window.location.href = "/dashboard")}
+              onClick={() => navigate("/dashboard")}
             >
               Back
             </Button>

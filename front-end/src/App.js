@@ -11,14 +11,22 @@ import PrivateRoute from "./PrivateRoute";
 import { useLocalState } from "./util/useLocalStorage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
+import { useEffect } from "react/cjs/react.development";
 
 function App() {
   const [jwt, setJwt] = useLocalState("", "jwt");
-  const [roles, setRoles] = useState(getRolesFromJWT());
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    console.log("JWT has changed");
+    setRoles(getRolesFromJWT());
+  }, [jwt]);
 
   function getRolesFromJWT() {
     if (jwt) {
       const decodedJwt = jwt_decode(jwt);
+      console.log("decoded JWT:", decodedJwt);
+
       return decodedJwt.authorities;
     }
     return [];
@@ -29,11 +37,11 @@ function App() {
         path="/dashboard"
         element={
           roles.find((role) => role === "ROLE_CODE_REVIEWER") ? (
-            <PrivateRoute>
+            <PrivateRoute handleJwt={setJwt}>
               <CodeReviewerDashboard />
             </PrivateRoute>
           ) : (
-            <PrivateRoute>
+            <PrivateRoute handleJwt={setJwt}>
               <Dashboard />
             </PrivateRoute>
           )

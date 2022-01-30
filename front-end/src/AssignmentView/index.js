@@ -12,9 +12,12 @@ import {
 } from "react-bootstrap";
 import { useState } from "react/cjs/react.development";
 import ajax from "../Services/fetchService";
+import StatusBadge from "../StatusBadge";
 import { useLocalState } from "../util/useLocalStorage";
+import { useNavigate } from "react-router-dom";
 
 const AssignmentView = () => {
+  let navigate = useNavigate();
   const [jwt, setJwt] = useLocalState("", "jwt");
   const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({
@@ -34,11 +37,11 @@ const AssignmentView = () => {
     setAssignment(newAssignment);
   }
 
-  function save() {
+  function save(status) {
     // this implies that the student is submitting the assignment for the first time
 
-    if (assignment.status === assignmentStatuses[0].status) {
-      updateAssignment("status", assignmentStatuses[1].status);
+    if (status && assignment.status !== status) {
+      updateAssignment("status", status);
     } else {
       persist();
     }
@@ -78,9 +81,7 @@ const AssignmentView = () => {
           {assignment.number ? <h1>Assignment {assignment.number} </h1> : <></>}
         </Col>
         <Col>
-          <Badge pill bg="info" style={{ fontSize: "1em" }}>
-            {assignment.status}
-          </Badge>
+          <StatusBadge text={assignment.status} />
         </Col>
       </Row>
       {assignment ? (
@@ -164,21 +165,34 @@ const AssignmentView = () => {
                 <Button
                   size="lg"
                   variant="secondary"
-                  onClick={() => (window.location.href = "/dashboard")}
+                  onClick={() => navigate("/dashboard")}
                 >
                   Back
                 </Button>
               </div>
             </>
-          ) : (
+          ) : assignment.status === "Pending Submission" ? (
             <div className="d-flex gap-5">
-              <Button size="lg" onClick={() => save()}>
+              <Button size="lg" onClick={() => save("Submitted")}>
                 Submit Assignment
               </Button>
               <Button
                 size="lg"
                 variant="secondary"
-                onClick={() => (window.location.href = "/dashboard")}
+                onClick={() => navigate("/dashboard")}
+              >
+                Back
+              </Button>
+            </div>
+          ) : (
+            <div className="d-flex gap-5">
+              <Button size="lg" onClick={() => save("Resubmitted")}>
+                Resubmit Assignment
+              </Button>
+              <Button
+                size="lg"
+                variant="secondary"
+                onClick={() => navigate("/dashboard")}
               >
                 Back
               </Button>

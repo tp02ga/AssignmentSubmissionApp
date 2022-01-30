@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react/cjs/react.development";
 import { useLocalState } from "../util/useLocalStorage";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [jwt, setJwt] = useLocalState("", "jwt");
+
+  useEffect(() => {
+    if (jwt != null) navigate("/dashboard");
+  }, [jwt]);
 
   function sendLoginRequest() {
     const reqBody = {
@@ -27,8 +34,7 @@ const Login = () => {
         else return Promise.reject("Invalid login attempt");
       })
       .then(([body, headers]) => {
-        setJwt(headers.get("authorization"));
-        window.location.href = "dashboard";
+        setJwt(String(headers.get("authorization")));
       })
       .catch((message) => {
         alert(message);
@@ -85,7 +91,7 @@ const Login = () => {
               type="button"
               size="lg"
               onClick={() => {
-                window.location.href = "/";
+                navigate("/");
               }}
             >
               Exit
