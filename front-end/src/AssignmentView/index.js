@@ -13,12 +13,12 @@ import {
 import { useState } from "react/cjs/react.development";
 import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
-import { useLocalState } from "../util/useLocalStorage";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../UserProvider";
 
 const AssignmentView = () => {
   let navigate = useNavigate();
-  const [jwt, setJwt] = useLocalState("", "jwt");
+  const user = useUser();
   const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({
     branch: "",
@@ -28,8 +28,29 @@ const AssignmentView = () => {
   });
   const [assignmentEnums, setAssignmentEnums] = useState([]);
   const [assignmentStatuses, setAssignmentStatuses] = useState([]);
+  const [comment, setComment] = useState({
+    text: "",
+    assignment: assignmentId,
+    user: user.jwt,
+  });
 
   const prevAssignmentValue = useRef(assignment);
+
+  function submitComment() {
+    ajax("/api/comments", "post", user.jwt, comment).then((data) => {
+      console.log(data);
+    });
+  }
+
+  useEffect(() => {
+    console.log(comment);
+  }, [comment]);
+
+  function updateComment(value) {
+    const commentCopy = { ...comment };
+    commentCopy.text = value;
+    setComment(commentCopy);
+  }
 
   function updateAssignment(prop, value) {
     const newAssignment = { ...assignment };
@@ -48,7 +69,7 @@ const AssignmentView = () => {
   }
 
   function persist() {
-    ajax(`/api/assignments/${assignmentId}`, "PUT", jwt, assignment).then(
+    ajax(`/api/assignments/${assignmentId}`, "PUT", user.jwt, assignment).then(
       (assignmentData) => {
         setAssignment(assignmentData);
       }
@@ -62,7 +83,7 @@ const AssignmentView = () => {
   }, [assignment]);
 
   useEffect(() => {
-    ajax(`/api/assignments/${assignmentId}`, "GET", jwt).then(
+    ajax(`/api/assignments/${assignmentId}`, "GET", user.jwt).then(
       (assignmentResponse) => {
         let assignmentData = assignmentResponse.assignment;
         if (assignmentData.branch === null) assignmentData.branch = "";
@@ -198,6 +219,14 @@ const AssignmentView = () => {
               </Button>
             </div>
           )}
+
+          <div className="mt-5">
+            <textarea
+              style={{ width: "100%", borderRadius: "0.25em" }}
+              onChange={(e) => updateComment(e.target.value)}
+            ></textarea>
+            <Button onClick={() => submitComment()}>Post Comment</Button>
+          </div>
         </>
       ) : (
         <></>

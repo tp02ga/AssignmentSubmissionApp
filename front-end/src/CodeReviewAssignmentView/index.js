@@ -14,11 +14,12 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react/cjs/react.development";
 import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
+import { useUser } from "../UserProvider";
 import { useLocalState } from "../util/useLocalStorage";
 
 const CodeReviewerAssignmentView = () => {
   const navigate = useNavigate();
-  const [jwt, setJwt] = useLocalState("", "jwt");
+  const user = useUser();
   const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({
     branch: "",
@@ -46,7 +47,7 @@ const CodeReviewerAssignmentView = () => {
   }
 
   function persist() {
-    ajax(`/api/assignments/${assignmentId}`, "PUT", jwt, assignment).then(
+    ajax(`/api/assignments/${assignmentId}`, "PUT", user.jwt, assignment).then(
       (assignmentData) => {
         setAssignment(assignmentData);
       }
@@ -60,7 +61,7 @@ const CodeReviewerAssignmentView = () => {
   }, [assignment]);
 
   useEffect(() => {
-    ajax(`/api/assignments/${assignmentId}`, "GET", jwt).then(
+    ajax(`/api/assignments/${assignmentId}`, "GET", user.jwt).then(
       (assignmentResponse) => {
         let assignmentData = assignmentResponse.assignment;
         if (assignmentData.branch === null) assignmentData.branch = "";

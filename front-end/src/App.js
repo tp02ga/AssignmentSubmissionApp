@@ -8,14 +8,12 @@ import CodeReviewerDashboard from "./CodeReviewerDashboard";
 import Homepage from "./Homepage";
 import Login from "./Login";
 import PrivateRoute from "./PrivateRoute";
-import { useLocalState } from "./util/useLocalStorage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
 import { useEffect } from "react/cjs/react.development";
-import { UserProvider, useUser } from "./UserProvider";
+import { useUser } from "./UserProvider";
 
 function App() {
-  // const [jwt, setJwt] = useLocalState("", "jwt");
   const [roles, setRoles] = useState([]);
   const user = useUser();
 
