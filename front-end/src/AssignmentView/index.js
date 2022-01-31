@@ -13,13 +13,15 @@ import {
 import { useState } from "react/cjs/react.development";
 import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../UserProvider";
 
 const AssignmentView = () => {
   let navigate = useNavigate();
   const user = useUser();
-  const assignmentId = window.location.href.split("/assignments/")[1];
+  const { assignmentId } = useParams();
+  console.log("assignmentId", assignmentId);
+  // const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({
     branch: "",
     githubUrl: "",
@@ -30,7 +32,7 @@ const AssignmentView = () => {
   const [assignmentStatuses, setAssignmentStatuses] = useState([]);
   const [comment, setComment] = useState({
     text: "",
-    assignment: assignmentId,
+    assignmentId: assignmentId != null ? parseInt(assignmentId) : null,
     user: user.jwt,
   });
 
