@@ -6,14 +6,15 @@ import ajax from "../Services/fetchService";
 import { useLocalState } from "../util/useLocalStorage";
 import StatusBadge from "../StatusBadge";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../UserProvider";
 
 const CodeReviewerDashboard = () => {
   const navigate = useNavigate();
-  const [jwt, setJwt] = useLocalState("", "jwt");
+  const user = useUser();
   const [assignments, setAssignments] = useState(null);
 
   useEffect(() => {
-    if (!jwt) navigate("/login");
+    if (!user.jwt) navigate("/login");
   });
   function editReview(assignment) {
     navigate(`/assignments/${assignment.id}`);
@@ -21,7 +22,7 @@ const CodeReviewerDashboard = () => {
   }
 
   function claimAssignment(assignment) {
-    const decodedJwt = jwt_decode(jwt);
+    const decodedJwt = jwt_decode(user.jwt);
     const user = {
       username: decodedJwt.sub,
     };
@@ -29,7 +30,7 @@ const CodeReviewerDashboard = () => {
     assignment.codeReviewer = user;
     // TODO: don't hardcode this status
     assignment.status = "In Review";
-    ajax(`/api/assignments/${assignment.id}`, "PUT", jwt, assignment).then(
+    ajax(`/api/assignments/${assignment.id}`, "PUT", user.jwt, assignment).then(
       (updatedAssignment) => {
         //TODO: update the view for the assignment that changed
         const assignmentsCopy = [...assignments];
@@ -41,11 +42,11 @@ const CodeReviewerDashboard = () => {
   }
 
   useEffect(() => {
-    ajax("api/assignments", "GET", jwt).then((assignmentsData) => {
+    ajax("api/assignments", "GET", user.jwt).then((assignmentsData) => {
       setAssignments(assignmentsData);
       console.log(assignmentsData);
     });
-  }, [jwt]);
+  }, [user.jwt]);
 
   return (
     <Container>
@@ -55,7 +56,7 @@ const CodeReviewerDashboard = () => {
             className="d-flex justify-content-end"
             style={{ cursor: "pointer" }}
             onClick={() => {
-              setJwt(null);
+              user.setJwt(null);
             }}
           >
             Logout
