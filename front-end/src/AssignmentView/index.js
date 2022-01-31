@@ -20,7 +20,7 @@ const AssignmentView = () => {
   let navigate = useNavigate();
   const user = useUser();
   const { assignmentId } = useParams();
-  console.log("assignmentId", assignmentId);
+
   // const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({
     branch: "",
@@ -35,18 +35,29 @@ const AssignmentView = () => {
     assignmentId: assignmentId != null ? parseInt(assignmentId) : null,
     user: user.jwt,
   });
+  const [comments, setComments] = useState([]);
 
   const prevAssignmentValue = useRef(assignment);
 
   function submitComment() {
-    ajax("/api/comments", "post", user.jwt, comment).then((data) => {
-      console.log(data);
+    ajax("/api/comments", "post", user.jwt, comment).then((commentData) => {
+      const commentsCopy = [...comments];
+      commentsCopy.push(commentData);
+
+      setComments(commentsCopy);
     });
   }
 
   useEffect(() => {
-    console.log(comment);
-  }, [comment]);
+    ajax(
+      `/api/comments?assignmentId=${assignmentId}`,
+      "get",
+      user.jwt,
+      null
+    ).then((commentsData) => {
+      setComments(commentsData);
+    });
+  }, []);
 
   function updateComment(value) {
     const commentCopy = { ...comment };
@@ -228,6 +239,16 @@ const AssignmentView = () => {
               onChange={(e) => updateComment(e.target.value)}
             ></textarea>
             <Button onClick={() => submitComment()}>Post Comment</Button>
+          </div>
+          <div className="mt-5">
+            {comments.map((comment) => (
+              <div>
+                <span style={{ fontWeight: "bold" }}>
+                  {`[${comment.createdDate}] ${comment.createdBy.name}: `}
+                </span>
+                {comment.text}
+              </div>
+            ))}
           </div>
         </>
       ) : (

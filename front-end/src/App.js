@@ -18,14 +18,12 @@ function App() {
   const user = useUser();
 
   useEffect(() => {
-    console.log("JWT has changed");
     setRoles(getRolesFromJWT());
   }, [user.jwt]);
 
   function getRolesFromJWT() {
     if (user.jwt) {
       const decodedJwt = jwt_decode(user.jwt);
-      console.log("decoded JWT:", decodedJwt);
 
       return decodedJwt.authorities;
     }

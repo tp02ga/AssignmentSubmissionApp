@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
 import com.coderscampus.AssignmentSubmissionApp.domain.User;
 
-public interface AssignmentRepository extends JpaRepository<Assignment, Long>{
+public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
 
     Set<Assignment> findByUser(User user);
 
@@ -16,4 +16,5 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long>{
             + "where (a.status = 'submitted' and (a.codeReviewer is null or a.codeReviewer = :codeReviewer))"
             + "or a.codeReviewer = :codeReviewer")
     Set<Assignment> findByCodeReviewer(User codeReviewer);
+
 }
