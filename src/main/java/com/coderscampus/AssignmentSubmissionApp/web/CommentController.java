@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,13 @@ public class CommentController {
     
     @PostMapping("")
     public ResponseEntity<Comment> createComment (@RequestBody CommentDto commentDto, @AuthenticationPrincipal User user) {
+        Comment comment = commentService.save(commentDto, user);
+        
+        return ResponseEntity.ok(comment);
+    }
+    
+    @PutMapping("{commentId}")
+    public ResponseEntity<Comment> updateComment (@RequestBody CommentDto commentDto, @AuthenticationPrincipal User user) {
         Comment comment = commentService.save(commentDto, user);
         
         return ResponseEntity.ok(comment);
