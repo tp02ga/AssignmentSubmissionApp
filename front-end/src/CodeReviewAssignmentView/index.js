@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react/cjs/react.development";
+import CommentContainer from "../CommentContainer";
 import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
 import { useUser } from "../UserProvider";
@@ -175,6 +176,8 @@ const CodeReviewerAssignmentView = () => {
               Back
             </Button>
           </div>
+
+          <CommentContainer assignmentId={assignmentId} />
         </>
       ) : (
         <></>

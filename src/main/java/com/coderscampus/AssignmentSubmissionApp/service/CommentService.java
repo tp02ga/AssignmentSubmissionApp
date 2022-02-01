@@ -1,6 +1,6 @@
 package com.coderscampus.AssignmentSubmissionApp.service;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,9 @@ public class CommentService {
         comment.setText(commentDto.getText());
         comment.setCreatedBy(user);
         if (comment.getId() == null)
-            comment.setCreatedDate(LocalDateTime.now());
+            comment.setCreatedDate(ZonedDateTime.now());
+        else
+            comment.setCreatedDate(commentDto.getCreatedDate());
         
         return commentRepo.save(comment);
     }

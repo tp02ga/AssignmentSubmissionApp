@@ -18,6 +18,7 @@ import { useUser } from "../UserProvider";
 import Comment from "../Comment";
 import { useInterval } from "../util/useInterval";
 import dayjs from "dayjs";
+import CommentContainer from "../CommentContainer";
 
 const AssignmentView = () => {
   let navigate = useNavigate();
@@ -31,95 +32,11 @@ const AssignmentView = () => {
     number: null,
     status: null,
   });
-  const emptyComment = {
-    id: null,
-    text: "",
-    assignmentId: assignmentId != null ? parseInt(assignmentId) : null,
-    user: user.jwt,
-  };
+
   const [assignmentEnums, setAssignmentEnums] = useState([]);
   const [assignmentStatuses, setAssignmentStatuses] = useState([]);
-  const [comment, setComment] = useState(emptyComment);
-  const [comments, setComments] = useState([]);
 
   const prevAssignmentValue = useRef(assignment);
-
-  useInterval(() => {
-    updateCommentTimeDisplay();
-  }, 1000 * 5);
-  function updateCommentTimeDisplay() {
-    console.log("Comments in update", comments);
-    const commentsCopy = [...comments];
-    commentsCopy.forEach(
-      (comment) => (comment.createdDate = dayjs(comment.createdDate))
-    );
-    console.log("Copy of comments is:", commentsCopy);
-    setComments(commentsCopy);
-  }
-
-  function handleEditComment(commentId) {
-    const i = comments.findIndex((comment) => comment.id === commentId);
-    const commentCopy = {
-      id: comments[i].id,
-      text: comments[i].text,
-      assignmentId: assignmentId != null ? parseInt(assignmentId) : null,
-      user: user.jwt,
-    };
-    setComment(commentCopy);
-  }
-
-  function handleDeleteComment(commentId) {
-    // TODO: send DELETE request to server
-    ajax(`/api/comments/${commentId}`, "delete", user.jwt).then((msg) => {
-      const commentsCopy = [...comments];
-      const i = commentsCopy.findIndex((comment) => comment.id === commentId);
-      commentsCopy.splice(i, 1);
-      console.log("1. Updating comments", commentsCopy);
-      setComments(commentsCopy);
-    });
-  }
-
-  function submitComment() {
-    if (comment.id) {
-      ajax(`/api/comments/${comment.id}`, "put", user.jwt, comment).then(
-        (d) => {
-          const commentsCopy = [...comments];
-          const i = commentsCopy.findIndex((comment) => comment.id === d.id);
-          commentsCopy[i] = d;
-          console.log("2. Updating comments", commentsCopy);
-          setComments(commentsCopy);
-          setComment(emptyComment);
-        }
-      );
-    } else {
-      ajax("/api/comments", "post", user.jwt, comment).then((d) => {
-        const commentsCopy = [...comments];
-        commentsCopy.push(d);
-
-        console.log("3. Updating comments", commentsCopy);
-        setComments(commentsCopy);
-        setComment(emptyComment);
-      });
-    }
-  }
-
-  useEffect(() => {
-    ajax(
-      `/api/comments?assignmentId=${assignmentId}`,
-      "get",
-      user.jwt,
-      null
-    ).then((commentsData) => {
-      console.log("4. Updating comments", commentsData);
-      setComments(commentsData);
-    });
-  }, []);
-
-  function updateComment(value) {
-    const commentCopy = { ...comment };
-    commentCopy.text = value;
-    setComment(commentCopy);
-  }
 
   function updateAssignment(prop, value) {
     const newAssignment = { ...assignment };
@@ -289,24 +206,7 @@ const AssignmentView = () => {
             </div>
           )}
 
-          <div className="mt-5">
-            <textarea
-              style={{ width: "100%", borderRadius: "0.25em" }}
-              onChange={(e) => updateComment(e.target.value)}
-              value={comment.text}
-            ></textarea>
-            <Button onClick={() => submitComment()}>Post Comment</Button>
-          </div>
-          <div className="mt-5">
-            {comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                commentData={comment}
-                emitDeleteComment={handleDeleteComment}
-                emitEditComment={handleEditComment}
-              />
-            ))}
-          </div>
+          <CommentContainer assignmentId={assignmentId} />
         </>
       ) : (
         <></>
