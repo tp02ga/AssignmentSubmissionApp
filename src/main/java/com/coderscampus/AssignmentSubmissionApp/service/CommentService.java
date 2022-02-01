@@ -41,5 +41,10 @@ public class CommentService {
         return comments;
     }
 
+    public void delete(Long commentId) {
+        commentRepo.deleteById(commentId);
+        
+    }
+
     
 }

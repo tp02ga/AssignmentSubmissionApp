@@ -56,7 +56,13 @@ const AssignmentView = () => {
 
   function handleDeleteComment(commentId) {
     // TODO: send DELETE request to server
-    console.log("I've been to to delete this comment", comment);
+    console.log("I've been to to delete this comment", commentId);
+    ajax(`/api/comments/${commentId}`, "delete", user.jwt).then((msg) => {
+      const commentsCopy = [...comments];
+      const i = commentsCopy.findIndex((comment) => comment.id === commentId);
+      commentsCopy.splice(i, 1);
+      setComments(commentsCopy);
+    });
   }
 
   function submitComment() {
