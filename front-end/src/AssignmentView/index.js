@@ -16,6 +16,8 @@ import StatusBadge from "../StatusBadge";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../UserProvider";
 import Comment from "../Comment";
+import { useInterval } from "../util/useInterval";
+import dayjs from "dayjs";
 
 const AssignmentView = () => {
   let navigate = useNavigate();
@@ -42,9 +44,21 @@ const AssignmentView = () => {
 
   const prevAssignmentValue = useRef(assignment);
 
+  useInterval(() => {
+    updateCommentTimeDisplay();
+  }, 1000 * 5);
+  function updateCommentTimeDisplay() {
+    console.log("Comments in update", comments);
+    const commentsCopy = [...comments];
+    commentsCopy.forEach(
+      (comment) => (comment.createdDate = dayjs(comment.createdDate))
+    );
+    console.log("Copy of comments is:", commentsCopy);
+    setComments(commentsCopy);
+  }
+
   function handleEditComment(commentId) {
     const i = comments.findIndex((comment) => comment.id === commentId);
-    console.log("I've been to to edit this comment", comments[i]);
     const commentCopy = {
       id: comments[i].id,
       text: comments[i].text,
@@ -56,11 +70,11 @@ const AssignmentView = () => {
 
   function handleDeleteComment(commentId) {
     // TODO: send DELETE request to server
-    console.log("I've been to to delete this comment", commentId);
     ajax(`/api/comments/${commentId}`, "delete", user.jwt).then((msg) => {
       const commentsCopy = [...comments];
       const i = commentsCopy.findIndex((comment) => comment.id === commentId);
       commentsCopy.splice(i, 1);
+      console.log("1. Updating comments", commentsCopy);
       setComments(commentsCopy);
     });
   }
@@ -72,6 +86,7 @@ const AssignmentView = () => {
           const commentsCopy = [...comments];
           const i = commentsCopy.findIndex((comment) => comment.id === d.id);
           commentsCopy[i] = d;
+          console.log("2. Updating comments", commentsCopy);
           setComments(commentsCopy);
           setComment(emptyComment);
         }
@@ -81,6 +96,7 @@ const AssignmentView = () => {
         const commentsCopy = [...comments];
         commentsCopy.push(d);
 
+        console.log("3. Updating comments", commentsCopy);
         setComments(commentsCopy);
         setComment(emptyComment);
       });
@@ -94,6 +110,7 @@ const AssignmentView = () => {
       user.jwt,
       null
     ).then((commentsData) => {
+      console.log("4. Updating comments", commentsData);
       setComments(commentsData);
     });
   }, []);
@@ -283,12 +300,10 @@ const AssignmentView = () => {
           <div className="mt-5">
             {comments.map((comment) => (
               <Comment
-                createdDate={comment.createdDate}
-                createdBy={comment.createdBy}
-                text={comment.text}
+                key={comment.id}
+                commentData={comment}
                 emitDeleteComment={handleDeleteComment}
                 emitEditComment={handleEditComment}
-                id={comment.id}
               />
             ))}
           </div>
