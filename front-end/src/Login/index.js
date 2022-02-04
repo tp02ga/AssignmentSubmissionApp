@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react/cjs/react.development";
 import { useUser } from "../UserProvider";
 
 const Login = () => {

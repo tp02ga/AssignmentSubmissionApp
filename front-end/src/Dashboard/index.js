@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Row } from "react-bootstrap";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useState } from "react/cjs/react.development";
 import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
 import { useUser } from "../UserProvider";

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Badge,
   Button,
@@ -11,7 +11,6 @@ import {
   Row,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react/cjs/react.development";
 import CommentContainer from "../CommentContainer";
 import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";

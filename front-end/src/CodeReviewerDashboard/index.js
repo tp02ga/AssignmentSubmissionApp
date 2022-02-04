@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Container, Row } from "react-bootstrap";
 import jwt_decode from "jwt-decode";
-import { useState } from "react/cjs/react.development";
 import ajax from "../Services/fetchService";
 import { useLocalState } from "../util/useLocalStorage";
 import StatusBadge from "../StatusBadge";

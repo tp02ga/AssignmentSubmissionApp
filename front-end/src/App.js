@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
@@ -10,7 +10,6 @@ import Login from "./Login";
 import PrivateRoute from "./PrivateRoute";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
-import { useEffect } from "react/cjs/react.development";
 import { useUser } from "./UserProvider";
 
 function App() {

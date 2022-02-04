@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useUser } from "../UserProvider";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { useEffect } from "react/cjs/react.development";
 
 const Comment = (props) => {
   const user = useUser();
