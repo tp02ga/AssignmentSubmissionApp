@@ -15,6 +15,9 @@ services:
     restart: always
     environment: # Pass environment variables to the service
       spring.profiles.active: prod
+      db.url: jdbc:mysql://proffessoprod.cq548thrnnwh.us-east-1.rds.amazonaws.com:3306/assignment_submission_db
+      db.username: tp02ga
+      db.password: 7o2PFCihnOJoAw8Weedw
     networks: # Networks to join (Services on the same network can communicate with each other using their name)
       - submission-app
 
@@ -24,7 +27,7 @@ services:
       context: front-end 
       dockerfile: Dockerfile
     ports:
-      - "3000:3000" # Map the exposed port 80 on the container to port 3000 on the host machine
+      - "80:80" # Map the exposed port 80 on the container to port 3000 on the host machine
     restart: always
     depends_on:
       - back-end
