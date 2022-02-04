@@ -1,0 +1,38 @@
+# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+
+version: '3.7'
+
+# Define services
+services:
+  # App backend service
+  back-end:
+    # Configuration for building the docker image for the backend service
+    build:
+      context: back-end 
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    restart: always
+    environment: # Pass environment variables to the service
+      spring.profiles.active: prod
+    networks: # Networks to join (Services on the same network can communicate with each other using their name)
+      - submission-app
+
+  # Frontend Service 
+  front-end:
+    build:
+      context: front-end 
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Map the exposed port 80 on the container to port 3000 on the host machine
+    restart: always
+    depends_on:
+      - back-end
+    networks:
+      - submission-app  
+
+  
+# Networks to be created to facilitate communication between containers
+networks:
+  submission-app:
+  

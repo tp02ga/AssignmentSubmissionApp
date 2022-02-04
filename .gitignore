@@ -37,3 +37,4 @@ build/
 .vscode/
 mvnw.cmd
 mvnw
+front-end/Dockerfile.old

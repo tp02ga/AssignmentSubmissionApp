@@ -1,4 +1,3 @@
-# pull official base image
 FROM node:14.15.0
 
 # set working directory
@@ -15,6 +14,8 @@ RUN npm install react-scripts@3.4.1 -g --silent
 
 # add app
 COPY . ./
+
+RUN npm config set proxy http://app-server:8080
 
 # start app
 CMD ["npm", "start"]

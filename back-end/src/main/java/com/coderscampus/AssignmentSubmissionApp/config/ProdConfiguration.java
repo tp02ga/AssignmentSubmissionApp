@@ -14,11 +14,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Profile("prod")
 public class ProdConfiguration {
     
-    @Value("${db.username}")
+    @Value("${DB_USERNAME}")
     private String dbUsername;
-    @Value("${db.password}")
+    @Value("${DB_PASSWORD}")
     private String dbPassword;
-    @Value("${db.url}")
+    @Value("${DB_URL}")
     private String dbUrl;
     
     @Bean
