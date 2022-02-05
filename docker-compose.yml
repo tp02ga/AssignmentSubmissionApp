@@ -1,41 +1,28 @@
-# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
+version: '3'
 
-version: '3.7'
-
-# Define services
 services:
-  # App backend service
-  back-end:
-    # Configuration for building the docker image for the backend service
-    build:
-      context: back-end 
-      dockerfile: Dockerfile
+  webserver:
+    image: nginx:latest
     ports:
-      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+      - 80:80
+      - 443:443
     restart: always
-    environment: # Pass environment variables to the service
-      spring.profiles.active: prod
-      db.url: insert_url_here
-      db.username: insert_username_here
-      db.password: insert_password_here
-    networks: # Networks to join (Services on the same network can communicate with each other using their name)
-      - submission-app
-
-  # Frontend Service 
-  front-end:
-    build:
-      context: front-end 
-      dockerfile: Dockerfile
-    ports:
-      - "80:80" # Map the exposed port 80 on the container to port 3000 on the host machine
-    restart: always
-    depends_on:
-      - back-end
-    networks:
-      - submission-app  
-
-  
-# Networks to be created to facilitate communication between containers
-networks:
-  submission-app:
-  
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+    command:
+      - certonly
+      - --webroot
+      - -w
+      - /var/www/certbot/
+      - --email=trevor@coderscampus.com
+      - --agree-tos
+      - --no-eff-email
+      - --dry-run
+      - -d
+      - assignments.coderscampus.com
+      - -v
