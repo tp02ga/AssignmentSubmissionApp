@@ -16,7 +16,8 @@ RUN npm config set proxy http://back-end:8080
 # Build the project and copy the files
 RUN npm run build
 
-# production environment
-FROM node:16-alpine as prod
-COPY --from=build /react-ui/build /usr/share/nginx/html
+COPY /react-ui/build/ /usr/share/nginx/html/
+
+RUN npm start
+
 EXPOSE 3000

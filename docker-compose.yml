@@ -1,6 +1,31 @@
-version: '3'
-
 services:
+  back-end:
+    build:
+      context: back-end
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    environment:
+      spring.profiles.active: prod
+      db.url: jdbc:mysql://url_here:3306/db_name_here
+      db.username: username_here
+      db.password: password_here
+    networks:
+      - submission-app
+    
+  front-end:
+    build:
+      context: front-end
+      dockerfile: Dockerfile
+    expose:
+      - "3000"
+    ports:
+      - 3000:3000
+    depends_on:
+      - back-end
+    networks:
+      - submission-app
+  
   webserver:
     image: nginx:latest
     ports:
@@ -10,19 +35,31 @@ services:
     volumes:
       - ./nginx/conf/:/etc/nginx/conf.d/:ro
       - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf:/etc/letsencrypt
+    depends_on:
+      - front-end
+    networks:
+      - submission-app
+
   certbot:
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf:/etc/letsencrypt
     command:
-      - certonly
-      - --webroot
-      - -w
-      - /var/www/certbot/
-      - --email=trevor@coderscampus.com
-      - --agree-tos
-      - --no-eff-email
-      - --dry-run
-      - -d
-      - assignments.coderscampus.com
-      - -v
+#      - renew
+       - certonly
+       - --webroot
+       - -w
+       - /var/www/certbot/
+       - --email=trevor@coderscampus.com
+       - --agree-tos
+       - --no-eff-email
+       - -d
+       - cod3rscampus.com
+
+volumes:
+  cert_home:
+
+networks:
+  submission-app:
