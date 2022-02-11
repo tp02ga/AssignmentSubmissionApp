@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "./coders-campus-logo.png"
-import Button from "../Components/Button.js";
+import {Button} from "react-bootstrap";
 
 const Homepage = () => {
 	function goToRegister(){
@@ -12,8 +12,8 @@ const Homepage = () => {
   return (	
     <div className="nav">
       <img src={logo} alt="logo" className="logo"/>
-      <Button text="log-in" onClick={goToLogin }/>
-      <Button text="register" onClick={goToRegister} className="btn"/>
+      <Button  onClick={goToLogin}/>
+      <Button type="button" onClick={goToRegister}/>
     </div>
   )
 
