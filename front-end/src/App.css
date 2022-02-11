@@ -19,3 +19,25 @@
   padding: 1em;
   margin: 1em 0em;
 }
+
+.logo {
+    width: 400px;
+    height: auto;
+}
+
+.nav{
+	display: flex;
+	font-family: "Nexa Bold", Times, sans-serif;
+}
+
+.btn{
+	background-color: #4CAF50; /* Green */
+  border: 2px solid black;
+  border-radius: 5px;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
