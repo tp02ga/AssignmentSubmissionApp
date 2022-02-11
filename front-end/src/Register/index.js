@@ -22,11 +22,7 @@ const Register = () => {
           method: "post",
           body: JSON.stringify(reqBody),
         })
-          .then((response) => {
-            if (response.status === 200)
-              return Promise.all([response.json(), response.headers]);
-            else return Promise.reject("Failed to register, please try again.");
-          });
+          .then((response) => response.json);
       }
 
   return (
