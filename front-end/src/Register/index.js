@@ -22,7 +22,7 @@ const Register = () => {
           method: "post",
           body: JSON.stringify(reqBody),
         })
-          .then((response) => response.json);
+          .then((response) => response.json).then(data => setPassword(""), setUsername(""), setName(""));
       }
 
   return (
