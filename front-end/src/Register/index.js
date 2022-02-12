@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import ajax from "../Services/fetchService"
 import { useUser } from "../UserProvider";
 
 const Register = () => {
