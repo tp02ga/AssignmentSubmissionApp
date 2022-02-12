@@ -1,19 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ajax from "../Services/fetchService"
+import { useUser } from "../UserProvider";
 
 const Register = () => {
+    const user = useUser();
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
-    const reqBody = {
-          username: username,
-          password: password,
-          name: name,
-        };
+  
+    useEffect(() => {
+        if (user.jwt) navigate("/dashboard");
+      }, [user]);
         
+function createAndLoginUser(){
+    const reqBody = {
+        username: username,
+        password: password,
+        name: name,
+      };
+
+      fetch("api/users/register", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "post",
+        body: JSON.stringify(reqBody),
+      })
+        .then((response) => {
+          if (response.status === 200)
+            return Promise.all([response.json(), response.headers]);
+          else return Promise.reject("Invalid login attempt");
+        })
+        .then(([body, headers]) => {
+          user.setJwt(headers.get("authorization"));
+        })
+        .catch((message) => {
+          alert(message);
+        });
+}
+
+
   return (
     <div>
  <Container className="mt-5 ">
@@ -72,9 +101,7 @@ const Register = () => {
               id="submit"
               type="button"
               size="lg"
-              onClick={() => {ajax("api/users/register", "post", "", reqBody);
-               navigate("/login");
-            }}
+              onClick={() => createAndLoginUser()}
             >
               Register
             </Button>
