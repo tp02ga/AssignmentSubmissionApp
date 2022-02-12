@@ -10,7 +10,7 @@ import com.coderscampus.AssignmentSubmissionApp.dto.UserDto;
 import com.coderscampus.AssignmentSubmissionApp.service.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 	@Autowired
 	private UserService userService;

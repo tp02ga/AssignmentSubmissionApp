@@ -35,7 +35,7 @@ public class UserService {
     	userRepo.save(newUser);
     	Authority authority = new Authority();
     	authority.setAuthority("ROLE_STUDENT");
-    	authority.setUser(userRepo.findByUsername(userDto.getUsername()).get());
+    	authority.setUser(newUser);
     	authorityRepo.save(authority);
 		
     }

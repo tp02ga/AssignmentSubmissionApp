@@ -1,30 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import ajax from "../Services/fetchService"
 
 const Register = () => {
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
-
-    function sendRegistration() {
-        const reqBody = {
+    const reqBody = {
           username: username,
           password: password,
           name: name,
         };
-    
-        fetch("api/user/register", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "post",
-          body: JSON.stringify(reqBody),
-        })
-          .then((response) => response.json).then(data => setPassword(""), setUsername(""), setName(""));
-      }
-
+        
   return (
     <div>
  <Container className="mt-5 ">
@@ -34,7 +23,7 @@ const Register = () => {
             <Form.Group className="mb-3" controlId="name">
               <Form.Label className="fs-4">Full Name</Form.Label>
               <Form.Control
-                type="email"
+                type="text"
                 size="lg"
                 placeholder="John Doe"
                 value={name}
@@ -83,7 +72,9 @@ const Register = () => {
               id="submit"
               type="button"
               size="lg"
-              onClick={() => sendRegistration()}
+              onClick={() => {ajax("api/users/register", "post", "", reqBody);
+               navigate("/login");
+            }}
             >
               Register
             </Button>
