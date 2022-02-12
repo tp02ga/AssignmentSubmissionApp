@@ -15,9 +15,9 @@ const Homepage = () => {
     <div className="nav">
       <Container>
         <Row>
-          <Col> <img src={logo} alt="logo" className="logo"/> </Col> 
-          <Col><Button variant="success" onClick={goToRegister}> Register </Button></Col>
-          <Col><Button onClick={goToLogin}> Login </Button></Col>
+          <Col md> <img src={logo} alt="logo" className="logo"/> </Col> 
+          <Col md><Button variant="primary" onClick={goToRegister}> Register </Button></Col>
+          <Col md><Button variant="primary" onClick={goToLogin}> Login </Button></Col>
         </Row>
       </Container>
     </div>
