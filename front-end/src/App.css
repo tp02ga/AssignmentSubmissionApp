@@ -21,8 +21,13 @@
 }
 
 .logo {
+    padding-top: 20px;
+    padding-left: 5px;
+    max-width: 100%;
+    min-width: 100%;
     width: 500px;
     height: auto;
+    position: fixed;  
 }
 
 .nav{
