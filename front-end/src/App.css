@@ -23,9 +23,8 @@
 .logo {
     padding-top: 20px;
     padding-left: 5px;
-    max-width: 20%;
-    min-width: 20%;
-    width: 500px;
+    max-width: 16%;
+    min-width: 16%;
     height: auto;
     position: fixed;  
 }
@@ -33,6 +32,26 @@
 .nav{
 	display: flex;
 	font-family: "Nexa Bold", Times, sans-serif;
+  min-height: 100px;
+  border-bottom: 1px solid grey;
+}
+
+.NavBar{
+  padding-top: 25px;
+  padding-left: 370px;
+}
+
+.navLink{
+  margin-right: 12px;
+  border: 2px black solid;
+  border-radius: 5px;
+  color: black;
+  padding: 10px 30px;
+  text-align: center;
+}
+
+.navLink:hover {
+  text-decoration: underline;
 }
 
 
