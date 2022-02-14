@@ -17,6 +17,8 @@ public class AssignmentService {
 
     @Autowired
     private AssignmentRepository assignmentRepo;
+    @Autowired
+    private NotificationService notificationService;
 
     public Assignment save(User user) {
         Assignment assignment = new Assignment();
@@ -69,17 +71,37 @@ public class AssignmentService {
 
     public Assignment save(Assignment assignment) {
     	//load the assignment from DB using assignment.getId() in order to get current status
+    	Assignment oldAssignment = assignmentRepo.findById(assignment.getId()).get();
+    	String oldStatus = oldAssignment.getStatus();
+    	assignmentRepo.save(assignment);
+    	
+    	Assignment newAssignment = assignmentRepo.findById(assignment.getId()).get();
+    	String newStatus = assignment.getStatus();
     	
     	//compare old status from above to the new status "assignment.getStatus()" to determine if an email should be sent
+    	if(oldStatus != newStatus) {
+    		
+    		//if changing from PENDING_SUBMISSION to SUBMITTED, then email code reviewers
+        	if(oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted")) {
+        		notificationService.sendAssignmentStatusUpdateCodeReviewer(oldStatus, assignment);
+        	}
+       
+        	if(oldStatus.contentEquals("NEEDS_UPDATE") && newStatus.contentEquals("RESUBMITTED")) {
+        		notificationService.sendAssignmentStatusUpdateCodeReviewer(oldStatus, assignment);
+        	}
+        	//if changing from IN_REVIEW to COMPLETED, then email student
+        	if(oldStatus.contentEquals("IN_REVIEW") && newStatus.contentEquals("COMPLETED")) {
+        		notificationService.sendAssignmentStatusUpdateStudent(oldStatus, assignment);
+        	}
+        	//if changing from IN_REVIEW to NEEDS_UPDATES, then email student
+    		if(oldStatus.equals("IN_REVIEW") && newStatus.equals("NEEDS_UPDATES")) {
+    			notificationService.sendAssignmentStatusUpdateStudent(oldStatus, assignment);
+    		}
+    		
+    		
+    	}
     	
-    	
-    	//if changing from PENDING_SUBMISSION to SUBMITTED, then email code reviewers
-    	
-    	//if changing from NEEDS_UPDATE to RESUBMITTED, then email code reviewers
-    	
-    	//if changing from IN_REVIEW to COMPLETED, then email student
-    	
-    	//if changing from IN_REVIEW to NEEDS_UPDATES, then email student
-        return assignmentRepo.save(assignment);
+    
+        return assignment;
     }
 }
