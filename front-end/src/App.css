@@ -46,8 +46,9 @@
   border: 2px black solid;
   border-radius: 5px;
   color: black;
-  padding: 10px 30px;
+  padding: 8px 25px;
   text-align: center;
+  text-decoration: none;
 }
 
 .navLink:hover {
