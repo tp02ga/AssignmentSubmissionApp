@@ -2,8 +2,6 @@ package com.coderscampus.AssignmentSubmissionApp.service;
 
 import java.util.Properties;
 
-
-
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -15,97 +13,86 @@ import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
 
 @Service
 public class NotificationService {
-	@Value("${gmail.username}") 
-		  String username;
-	@Value("${gmail.password}") 
-	      String password;
-	        @Value("#{'${code.reviewer.emails}'.split(',')}") 
-		      String codeReviewer;
-		  
-		  public void sendAssignmentStatusUpdateStudent(String oldStatus, Assignment assignment) {
-	      String link = "";
-	      if(assignment.getStatus().contentEquals("COMPLETED")) {
-	    	  link = assignment.getCodeReviewVideoUrl();
-	      }
-	      String emailMessageStudent ="Hello" + assignment.getUser().getName()+", "+
-          "\n\n Your assignment " + assignment.getNumber()+ " has gone from " +oldStatus+"to"+assignment.getStatus()+" " + link;
+	@Value("${gmail.username}")
+	String username;
+	@Value("${gmail.password}")
+	String password;
+	@Value("#{'${code.reviewer.emails}'.split(',')}")
+	String codeReviewer;
 
-	        Properties prop = new Properties();
-			prop.put("mail.smtp.host", "smtp.gmail.com");
-	        prop.put("mail.smtp.port", "587");
-	        prop.put("mail.smtp.auth", "true");
-	        prop.put("mail.smtp.starttls.enable", "true"); //TLS
-	        
-	        Session session = Session.getInstance(prop,
-	                new javax.mail.Authenticator() {
-	                    protected PasswordAuthentication getPasswordAuthentication() {
-	                        return new PasswordAuthentication(username, password);
-	                    }
-	                });
+	public void sendAssignmentStatusUpdateStudent(String oldStatus, Assignment assignment) {
+		String link = assignment.getCodeReviewVideoUrl();
+		if (assignment.getCodeReviewVideoUrl() == null) {
+			link = " ";
+		}
 
-	        try {
+		String emailMessageStudent = "Hello" + assignment.getUser().getName() + ", " + "\n\n Your assignment "
+				+ assignment.getNumber() + " has gone from " + oldStatus + " to " + assignment.getStatus() + " " + link;
 
-	            Message message = new MimeMessage(session);
-	            message.setFrom(new InternetAddress(username));
-	            message.setRecipients(
-	                    Message.RecipientType.TO,
-	                    InternetAddress.parse(assignment.getUser().getUsername())
-	            );
-	            message.setSubject("Assignment Status Update");
-	            message.setText(emailMessageStudent);
+		Properties prop = new Properties();
+		prop.put("mail.smtp.host", "smtp.gmail.com");
+		prop.put("mail.smtp.port", "587");
+		prop.put("mail.smtp.auth", "true");
+		prop.put("mail.smtp.starttls.enable", "true"); // TLS
 
-	            Transport.send(message);
+		Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
 
-	            System.out.println("Done");
+		try {
 
-	        } catch (MessagingException e) {
-	            e.printStackTrace();
-	        }
-	    }
-		  
-		  public void sendAssignmentStatusUpdateCodeReviewer(String oldStatus, Assignment assignment) {
-		      String link = "";
-		      if(assignment.getStatus().contentEquals("SUBMITTED")) {
-		    	  link = assignment.getGithubUrl();
-		      }
-		      if(assignment.getStatus().contentEquals("RESUBMITTED")) {
-		    	  codeReviewer = assignment.getCodeReviewer().getUsername();
-		      }
-		    String emailMessage = "Hello, " + assignment.getUser().getName()+"'s "+
-	                  "assignment " + assignment.getNumber()+
-	                  " has gone from " +oldStatus+"to"+assignment.getStatus()+" " + link;
-		      
-		        Properties prop = new Properties();
-				prop.put("mail.smtp.host", "smtp.gmail.com");
-		        prop.put("mail.smtp.port", "587");
-		        prop.put("mail.smtp.auth", "true");
-		        prop.put("mail.smtp.starttls.enable", "true"); //TLS
-		        
-		        Session session = Session.getInstance(prop,
-		                new javax.mail.Authenticator() {
-		                    protected PasswordAuthentication getPasswordAuthentication() {
-		                        return new PasswordAuthentication(username, password);
-		                    }
-		                });
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(username));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(assignment.getUser().getUsername()));
+			message.setSubject("Assignment Status Update");
+			message.setText(emailMessageStudent);
 
-		        try {
+			Transport.send(message);
 
-		            Message message = new MimeMessage(session);
-		            message.setFrom(new InternetAddress(username));
-		            message.setRecipients(
-		                    Message.RecipientType.TO,
-		                    InternetAddress.parse(codeReviewer)
-		            );
-		            message.setSubject("Assignment Status Update");
-		            message.setText(emailMessage);
+			System.out.println("Done");
 
-		            Transport.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
 
-		            System.out.println("Done");
+	public void sendAssignmentStatusUpdateCodeReviewer(String oldStatus, Assignment assignment) {
+		String link = assignment.getGithubUrl();
+		if (assignment.getStatus().contentEquals("Resubmitted")) {
+			codeReviewer = assignment.getCodeReviewer().getUsername();
+		}
+		String emailMessage = "Hello, " + assignment.getUser().getName() + "'s " + "assignment "
+				+ assignment.getNumber() + " has gone from " + oldStatus + " to " + assignment.getStatus() + " " + link;
 
-		        } catch (MessagingException e) {
-		            e.printStackTrace();
-		        }
-		    }
-	  
+		Properties prop = new Properties();
+		prop.put("mail.smtp.host", "smtp.gmail.com");
+		prop.put("mail.smtp.port", "587");
+		prop.put("mail.smtp.auth", "true");
+		prop.put("mail.smtp.starttls.enable", "true"); // TLS
+
+		Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, password);
+			}
+		});
+
+		try {
+
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(username));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(codeReviewer));
+			message.setSubject("Assignment Status Update");
+			message.setText(emailMessage);
+
+			Transport.send(message);
+
+			System.out.println("Done");
+
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
 }
