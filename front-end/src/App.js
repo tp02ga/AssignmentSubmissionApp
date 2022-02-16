@@ -13,6 +13,18 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
 import { useUser } from "./UserProvider";
 
+/**
+ *
+ * /AssignmentSubmissionApp/
+ *   - back-end/
+ *     - src/main/java/
+ *     - Dockerfile
+ *   - front-end/
+ *     - src/Services/
+ *     - Dockerfile
+ *   - docker-compose.yml
+ */
+
 function App() {
   const [roles, setRoles] = useState([]);
   const user = useUser();

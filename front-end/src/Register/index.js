@@ -2,28 +2,49 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
+import { useUser } from "../UserProvider";
+
 const Register = () => {
+    const user = useUser();
+
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
 
-    function sendRegistration() {
-        const reqBody = {
-          username: username,
-          password: password,
-          name: name,
-        };
-    
-        fetch("api/user/register", {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "post",
-          body: JSON.stringify(reqBody),
+  
+    useEffect(() => {
+        if (user.jwt) navigate("/dashboard");
+      }, [user]);
+        
+function createAndLoginUser(){
+    const reqBody = {
+        username: username,
+        password: password,
+        name: name,
+      };
+
+      fetch("api/users/register", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "post",
+        body: JSON.stringify(reqBody),
+      })
+        .then((response) => {
+          if (response.status === 200)
+            return Promise.all([response.json(), response.headers]);
+          else return Promise.reject("Invalid login attempt");
         })
-          .then((response) => response.json).then(data => setPassword(""), setUsername(""), setName(""));
-      }
+        .then(([body, headers]) => {
+          user.setJwt(headers.get("authorization"));
+        })
+        .catch((message) => {
+          alert(message);
+        });
+}
+
+
 
   return (
     <div>
@@ -34,7 +55,9 @@ const Register = () => {
             <Form.Group className="mb-3" controlId="name">
               <Form.Label className="fs-4">Full Name</Form.Label>
               <Form.Control
-                type="email"
+
+                type="text"
+
                 size="lg"
                 placeholder="John Doe"
                 value={name}
@@ -83,7 +106,9 @@ const Register = () => {
               id="submit"
               type="button"
               size="lg"
-              onClick={() => sendRegistration()}
+
+              onClick={() => createAndLoginUser()}
+
             >
               Register
             </Button>

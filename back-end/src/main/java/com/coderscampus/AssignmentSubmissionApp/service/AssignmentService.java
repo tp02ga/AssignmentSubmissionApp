@@ -87,6 +87,7 @@ public class AssignmentService {
 
 		}
 
-		return assignment;
+		return newAssignment;
 	}
+
 }

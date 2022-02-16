@@ -6,60 +6,28 @@ services:
     ports:
       - 8080:8080
     environment:
-      spring.profiles.active: prod
-      db.url: jdbc:mysql://url_here:3306/db_name_here
-      db.username: username_here
-      db.password: password_here
-    networks:
-      - submission-app
-    
+      DB_URL: jdbc:mysql://mysql-db/assignment_submission_db
+      DB_USERNAME: example_user
+      DB_PASSWORD: password123
+    depends_on:
+      - mysql-container
   front-end:
     build:
       context: front-end
       dockerfile: Dockerfile
-    expose:
-      - "3000"
     ports:
-      - 3000:3000
+      - 80:3000
     depends_on:
       - back-end
-    networks:
-      - submission-app
-  
-  webserver:
-    image: nginx:latest
-    ports:
-      - 80:80
-      - 443:443
-    restart: always
+  mysql-container:
+    image: mysql:8.0.28
     volumes:
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
-      - ./certbot/www:/var/www/certbot/:ro
-      - ./certbot/conf:/etc/letsencrypt
-    depends_on:
-      - front-end
-    networks:
-      - submission-app
-
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf:/etc/letsencrypt
-    command:
-#      - renew
-       - certonly
-       - --webroot
-       - -w
-       - /var/www/certbot/
-       - --email=trevor@coderscampus.com
-       - --agree-tos
-       - --no-eff-email
-       - -d
-       - cod3rscampus.com
+      - dbdata:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: assignment_submission_db
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_USER: example_user
+      MYSQL_PASSWORD: password123
 
 volumes:
-  cert_home:
-
-networks:
-  submission-app:
+  dbdata:
