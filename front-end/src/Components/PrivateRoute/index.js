@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 import { useUser } from "../UserProvider";
 import { useState, useEffect } from "react";
-import ajax from "../Services/fetchService";
+import ajax from "../../Services/fetchService";
 
 const PrivateRoute = (props) => {
   const user = useUser();

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserProvider";
-
+import DarkMode from "../DarkMode"
 const Login = () => {
   const user = useUser();
   const navigate = useNavigate();
@@ -40,6 +40,7 @@ const Login = () => {
   }
   return (
     <>
+    <DarkMode/>
       <Container className="mt-5 ">
         <Row className="justify-content-center">
           <Col md="8" lg="6">

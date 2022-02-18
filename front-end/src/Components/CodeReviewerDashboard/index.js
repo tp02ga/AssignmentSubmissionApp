@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Container, Row } from "react-bootstrap";
 import jwt_decode from "jwt-decode";
-import ajax from "../Services/fetchService";
-import { useLocalState } from "../util/useLocalStorage";
+import ajax from "../../Services/fetchService";
+import { useLocalState } from "../../util/useLocalStorage";
 import StatusBadge from "../StatusBadge";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserProvider";

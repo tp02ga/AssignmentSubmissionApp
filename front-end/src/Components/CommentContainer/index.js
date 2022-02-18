@@ -2,9 +2,9 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Comment from "../Comment";
-import ajax from "../Services/fetchService";
+import ajax from "../../Services/fetchService";
 import { useUser } from "../UserProvider";
-import { useInterval } from "../util/useInterval";
+import { useInterval } from "../../util/useInterval";
 
 const CommentContainer = (props) => {
   const { assignmentId } = props;
