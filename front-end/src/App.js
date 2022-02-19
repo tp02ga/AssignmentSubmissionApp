@@ -12,7 +12,7 @@ import PrivateRoute from "./PrivateRoute";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
 import { useUser } from "./UserProvider";
-import DarkMode from "./DarkMode";
+
 /**
  *
  * /AssignmentSubmissionApp/
@@ -72,7 +72,7 @@ function App() {
         }
       />
       <Route path="login" element={<Login />} />
-      <Route path="/" element={ <><DarkMode/> <Homepage /></>} />
+      <Route path="/" element={ <Homepage />} />
       <Route path="/register" element={<Register/>} />
     </Routes>
   );
