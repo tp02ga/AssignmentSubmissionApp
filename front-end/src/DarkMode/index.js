@@ -1,7 +1,7 @@
 import React from "react"
-import "../../Styles/DarkMode.css"
 import {Form} from "react-bootstrap"
-
+import { BsFillMoonFill } from "react-icons/bs";
+import "./darkmode.css"
 const DarkMode = () => {
   let clickedClass = "clicked"
   const body = document.body
@@ -34,16 +34,19 @@ const DarkMode = () => {
   }
 
   return (
-    <Form>
+    <div class="darkMode">
+   
     <Form.Check 
       type="switch"
-      
-      label="Dark"
       className={theme === "dark" ? clickedClass : ""}
       id="darkMode"
       onClick={e => switchTheme(e)}
     />
-  </Form>
+   <BsFillMoonFill
+   class="moon"/>
+  
+  
+   </div>
   )
 }
 

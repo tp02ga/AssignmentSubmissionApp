@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Badge, Button, Card, Col, Row } from "react-bootstrap";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import ajax from "../../Services/fetchService";
+import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
 import { useUser } from "../UserProvider";
-import { useLocalState } from "../../util/useLocalStorage";
+import { useLocalState } from "../util/useLocalStorage";
 
 const Dashboard = () => {
   const navigate = useNavigate();

@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import AssignmentView from "./Components/AssignmentView";
-import Dashboard from "./Components/Dashboard";
-import CodeReviewerDashboard from "./Components/CodeReviewerDashboard";
-import Homepage from "./Components/Homepage";
-import Login from "./Components/Login";
-import Register from "./Components/Register"
-import PrivateRoute from "./Components/PrivateRoute";
+import AssignmentView from "./AssignmentView";
+import Dashboard from "./Dashboard";
+import CodeReviewerDashboard from "./CodeReviewerDashboard";
+import Homepage from "./Homepage";
+import Login from "./Login";
+import Register from "./Register"
+import PrivateRoute from "./PrivateRoute";
 import "bootstrap/dist/css/bootstrap.min.css";
-import CodeReviewerAssignmentView from "./Components/CodeReviewAssignmentView";
-import { useUser } from "./Components/UserProvider";
-import DarkMode from "./Components/DarkMode";
+import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
+import { useUser } from "./UserProvider";
+import DarkMode from "./DarkMode";
 /**
  *
  * /AssignmentSubmissionApp/
