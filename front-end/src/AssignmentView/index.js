@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Badge,
   Button,
   ButtonGroup,
   Col,
@@ -14,9 +13,6 @@ import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
 import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../UserProvider";
-import Comment from "../Comment";
-import { useInterval } from "../util/useInterval";
-import dayjs from "dayjs";
 import CommentContainer from "../CommentContainer";
 
 const AssignmentView = () => {
