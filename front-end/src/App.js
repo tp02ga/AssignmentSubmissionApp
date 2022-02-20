@@ -7,23 +7,10 @@ import Dashboard from "./Dashboard";
 import CodeReviewerDashboard from "./CodeReviewerDashboard";
 import Homepage from "./Homepage";
 import Login from "./Login";
-import Register from "./Register"
 import PrivateRoute from "./PrivateRoute";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./custom.scss";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
 import { useUser } from "./UserProvider";
-
-/**
- *
- * /AssignmentSubmissionApp/
- *   - back-end/
- *     - src/main/java/
- *     - Dockerfile
- *   - front-end/
- *     - src/Services/
- *     - Dockerfile
- *   - docker-compose.yml
- */
 
 function App() {
   const [roles, setRoles] = useState([]);
@@ -73,7 +60,6 @@ function App() {
       />
       <Route path="login" element={<Login />} />
       <Route path="/" element={<Homepage />} />
-      <Route path="/register" element={<Register/>} />
     </Routes>
   );
 }

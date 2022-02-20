@@ -1,12 +1,23 @@
-FROM node:17-alpine3.15
+# stage1 as build
+FROM node:16-alpine as build
 
-# COPY [host machine] [container]  (first path is relative to the Dockerfile, second is relative to root on the container)
-COPY package.json package-lock.json .
+# copy the package.json to install dependencies
+COPY package.json package-lock.json ./
 
-RUN npm install
+# Install the dependencies and make the folder
+RUN npm install && mkdir /react-ui && mv ./node_modules ./react-ui
+
+WORKDIR /react-ui
 
 COPY . .
 
-# RUN npm run build
+RUN npm config set proxy http://back-end:8080
 
-CMD ["npm", "start"]
+# Build the project and copy the files
+RUN npm run build
+
+COPY /react-ui/build/ /usr/share/nginx/html/
+
+RUN npm start
+
+EXPOSE 3000
