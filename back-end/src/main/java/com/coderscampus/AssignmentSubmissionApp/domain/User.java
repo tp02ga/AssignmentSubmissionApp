@@ -1,63 +1,51 @@
 package com.coderscampus.AssignmentSubmissionApp.domain;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.coderscampus.proffesso.domain.ProffessoUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-    private static final long serialVersionUID = -1605751799209099860L;
-
+    private static final long serialVersionUID = 1840361243951715062L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate cohortStartDate;
     private String username;
     @JsonIgnore
     private String password;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    @JsonIgnore
-    private List<Authority> authorities = new ArrayList<>(); // ROLE_STUDENT
     private String name;
-
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<Authorities> authorities = new HashSet<>();
+    
+    public User () {}
+    public User (ProffessoUser proffessoUser) {
+        proffessoUser.getAuthorities().stream()
+        .forEach(auth -> {
+            Authorities newAuth = new Authorities();
+            newAuth.setAuthority(auth.getAuthority());
+            newAuth.setUser(this);
+        });
+        this.username = proffessoUser.getEmail();
+        this.id = proffessoUser.getId();
+        this.name = proffessoUser.getName();
+        this.password = proffessoUser.getPassword();
+    }
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public LocalDate getCohortStartDate() {
-        return cohortStartDate;
-    }
-
-    public void setCohortStartDate(LocalDate cohortStartDate) {
-        this.cohortStartDate = cohortStartDate;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     @Override
@@ -69,15 +57,31 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Set<Authorities> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(Set<Authorities> authorities) {
         this.authorities = authorities;
     }
 
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -97,13 +101,10 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    public String getName() {
-        return name;
+    @Override
+    public String toString() {
+        return "User [username=" + username + "]";
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
 }

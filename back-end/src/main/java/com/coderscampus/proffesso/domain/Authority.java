@@ -1,4 +1,4 @@
-package com.coderscampus.AssignmentSubmissionApp.domain;
+package com.coderscampus.proffesso.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +16,7 @@ public class Authority implements GrantedAuthority {
     private Long id;
     private String authority;
     @ManyToOne(optional = false)
-    private User user;
+    private ProffessoUser user;
     
     public Authority () {}
     
@@ -38,10 +38,10 @@ public class Authority implements GrantedAuthority {
         this.authority = authority;
     }
     
-    public User getUser() {
+    public ProffessoUser getUser() {
         return user;
     }
-    public void setUser(User user) {
+    public void setUser(ProffessoUser user) {
         this.user = user;
     }
     

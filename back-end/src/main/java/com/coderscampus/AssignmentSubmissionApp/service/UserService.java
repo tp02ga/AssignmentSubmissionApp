@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.coderscampus.AssignmentSubmissionApp.domain.Authority;
+import com.coderscampus.AssignmentSubmissionApp.domain.Authorities;
 import com.coderscampus.AssignmentSubmissionApp.domain.User;
 import com.coderscampus.AssignmentSubmissionApp.dto.UserDto;
 import com.coderscampus.AssignmentSubmissionApp.repository.AuthorityRepository;
@@ -33,7 +33,7 @@ public class UserService {
     	String encodedPassword = customPasswordEncoder.getPasswordEncoder().encode(userDto.getPassword());
     	newUser.setPassword(encodedPassword);
     	userRepo.save(newUser);
-    	Authority authority = new Authority();
+    	Authorities authority = new Authorities();
     	authority.setAuthority("ROLE_STUDENT");
     	authority.setUser(newUser);
     	authorityRepo.save(authority);

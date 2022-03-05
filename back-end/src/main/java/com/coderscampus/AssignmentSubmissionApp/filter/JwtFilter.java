@@ -1,31 +1,33 @@
 package com.coderscampus.AssignmentSubmissionApp.filter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.coderscampus.AssignmentSubmissionApp.repository.UserRepository;
+import com.coderscampus.AssignmentSubmissionApp.domain.User;
 import com.coderscampus.AssignmentSubmissionApp.util.JwtUtil;
+import com.coderscampus.proffesso.repository.ProffessoUserRepo;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     
     @Autowired
-    private UserRepository userRepo;
+    private ProffessoUserRepo proffessoUserRepo;
     
     @Autowired
     private JwtUtil jwtUtil;
@@ -33,19 +35,25 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        
-        // Get authorization header and validate
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (!StringUtils.hasText(header) || (StringUtils.hasText(header) && !header.startsWith("Bearer "))) {
+        if (request.getCookies() == null) {
             chain.doFilter(request, response);
             return;
         }
-        // Authorization -> ([Bearer], [asdf.138974sh.alsjkh234879.anhjksd3452.akjsd74])
-        final String token = header.split(" ")[1].trim();
+        // Get authorization header and validate
+        Optional<Cookie> jwtOpt = Arrays.stream(request.getCookies())
+              .filter(cookie -> "jwt".equals(cookie.getName()))
+              .findAny();
+        
+        if (jwtOpt.isEmpty()) {
+            chain.doFilter(request, response);
+            return;
+        }
 
         // Get user identity and set it on the spring security context
-        UserDetails userDetails = userRepo
-                .findByUsername(jwtUtil.getUsernameFromToken(token))
+        String token = jwtOpt.get().getValue();
+        UserDetails userDetails = proffessoUserRepo
+                .findByEmail(jwtUtil.getUsernameFromToken(token))
+                .map(proffessoUser -> new User(proffessoUser))
                 .orElse(null);
         
         // Get jwt token and validate

@@ -2,7 +2,7 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080/",
+  "proxy": "http://localhost:8081/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
@@ -10,6 +10,7 @@
     "bootstrap": "^5.1.3",
     "dayjs": "^1.10.7",
     "http-proxy-middleware": "^2.0.2",
+    "js-cookie": "^3.0.1",
     "jwt-check-expiration": "^1.0.5",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.1",

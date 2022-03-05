@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +21,7 @@ public class JwtUtil implements Serializable {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 30 * 24 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 12 * 30 * 24 * 60 * 60;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -59,9 +60,9 @@ public class JwtUtil implements Serializable {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("authorities", userDetails.getAuthorities()
-                                             .stream()
-                                             .map(auth -> auth.getAuthority())
-                                             .collect(Collectors.toList()));
+                .stream()
+                .map(auth -> auth.getAuthority())
+                .collect(Collectors.toList()));
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
@@ -80,8 +81,10 @@ public class JwtUtil implements Serializable {
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
+        if (!StringUtils.hasText(token))
+            return false;
+
         final String username = getUsernameFromToken(token);
-        
         return (userDetails != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

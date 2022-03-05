@@ -39,3 +39,5 @@ mvnw.cmd
 mvnw
 front-end/Dockerfile.old
 back-end/src/main/resources/application.properties
+docker-compose.yml
+docker-compose-local.yml

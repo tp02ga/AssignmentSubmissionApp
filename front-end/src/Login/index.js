@@ -8,12 +8,14 @@ const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState(null);
 
-  useEffect(() => {
-    if (user.jwt) navigate("/dashboard");
-  }, [user]);
+  // useEffect(() => {
+  //   if (user.jwt) navigate("/dashboard");
+  // }, [user]);
 
   function sendLoginRequest() {
+    setErrorMsg("");
     const reqBody = {
       username: username,
       password: password,
@@ -27,15 +29,13 @@ const Login = () => {
       body: JSON.stringify(reqBody),
     })
       .then((response) => {
-        if (response.status === 200)
-          return Promise.all([response.json(), response.headers]);
-        else return Promise.reject("Invalid login attempt");
+        if (response.status === 200) return response.text();
+        else {
+          setErrorMsg("Invalid username or password");
+        }
       })
-      .then(([body, headers]) => {
-        user.setJwt(headers.get("authorization"));
-      })
-      .catch((message) => {
-        alert(message);
+      .then((data) => {
+        if (data) navigate("/dashboard");
       });
   }
   return (
@@ -70,6 +70,17 @@ const Login = () => {
             </Form.Group>
           </Col>
         </Row>
+        {errorMsg ? (
+          <Row className="justify-content-center mb-4">
+            <Col md="8" lg="6">
+              <div className="" style={{ color: "red", fontWeight: "bold" }}>
+                {errorMsg}
+              </div>
+            </Col>
+          </Row>
+        ) : (
+          <></>
+        )}
         <Row className="justify-content-center">
           <Col
             md="8"

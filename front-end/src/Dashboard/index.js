@@ -12,6 +12,7 @@ const Dashboard = () => {
   const [assignments, setAssignments] = useState(null);
 
   useEffect(() => {
+    console.log("Value of user.jwt", user.jwt);
     ajax("api/assignments", "GET", user.jwt).then((assignmentsData) => {
       setAssignments(assignmentsData);
     });

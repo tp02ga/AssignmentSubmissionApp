@@ -10,12 +10,10 @@ const PrivateRoute = (props) => {
   const { children } = props;
 
   if (user) {
-    ajax(`/api/auth/validate?token=${user.jwt}`, "get", user.jwt).then(
-      (isValid) => {
-        setIsValid(isValid);
-        setIsLoading(false);
-      }
-    );
+    ajax(`/api/auth/validate`, "get", user.jwt).then((isValid) => {
+      setIsValid(isValid);
+      setIsLoading(false);
+    });
   } else {
     return <Navigate to="/login" />;
   }

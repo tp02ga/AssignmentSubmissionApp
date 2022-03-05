@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +25,7 @@ import com.coderscampus.AssignmentSubmissionApp.util.AuthorityUtil;
 
 @RestController
 @RequestMapping("/api/assignments")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"}, allowCredentials = "true")
 public class AssignmentController {
 
     @Autowired
@@ -59,7 +61,7 @@ public class AssignmentController {
         // add the code reviewer to this assignment if it was claimed
         if (assignment.getCodeReviewer() != null) {
             User codeReviewer = assignment.getCodeReviewer();
-            codeReviewer = userService.findUserByUsername(codeReviewer.getUsername()).orElse(new User());
+            codeReviewer = userService.findUserByUsername(codeReviewer.getUsername()).orElseThrow();
             
             if (AuthorityUtil.hasRole(AuthorityEnum.ROLE_CODE_REVIEWER.name(), codeReviewer)) {
                 assignment.setCodeReviewer(codeReviewer);
