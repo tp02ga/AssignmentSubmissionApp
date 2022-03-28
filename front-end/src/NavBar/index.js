@@ -5,6 +5,7 @@ import logo from "../Images/coders-campus-logo.png";
 
 function NavBar() {
   const navigate = useNavigate();
+  
   function goToRegister() {
     navigate("/register");
   }
