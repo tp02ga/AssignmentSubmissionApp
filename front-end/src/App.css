@@ -1,3 +1,40 @@
+
+:root {
+  --blue: rgb(45, 57, 70);
+  --white: rgb(236, 236, 236);
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--background-color)!important;
+  color: var(--text-color)!important;
+  font-weight: var(--font-weight)!important;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+body.light {
+  --background-color: var(--white);
+  --text-color: var(--blue);
+  --font-weight: 400;
+  
+}
+body.dark {
+  --background-color: var(--blue);
+  --text-color: var(--white);
+  --font-weight: 500;
+  
+}
+
+
 .assignment-wrapper {
   border: 1px dashed lightgray;
   padding: 2em;
@@ -19,3 +56,4 @@
   padding: 1em;
   margin: 1em 0em;
 }
+
