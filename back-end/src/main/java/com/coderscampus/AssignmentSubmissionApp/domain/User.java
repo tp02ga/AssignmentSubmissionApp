@@ -32,7 +32,7 @@ public class User implements UserDetails {
     private String password;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @JsonIgnore
-    private List<Authority> authorities = new ArrayList<>();
+    private List<Authority> authorities = new ArrayList<>(); // ROLE_STUDENT
     private String name;
 
     public Long getId() {

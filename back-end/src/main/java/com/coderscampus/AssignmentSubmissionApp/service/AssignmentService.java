@@ -68,6 +68,17 @@ public class AssignmentService {
     }
 
     public Assignment save(Assignment assignment) {
+        // TODO:
+        // load the assignment from DB using assignment.getId() in order to get the current status
+        
+        // compare old status from above to the new status "assignment.getStatus()" to determine
+        // if an email should be sent
+        
+        // if changing from PENDING_SUBMISSION -> SUBMITTED, then email code reviewers
+        // if changing from NEEDS_UPDATE -> RESUBMITTED, then email code reviewers
+        
+        // if changing from IN_REVIEW -> COMPLETED, then email the student         
+        // if changing from IN_REVIEW -> NEEDS_UPDATE, then email the student
         return assignmentRepo.save(assignment);
     }
 }
