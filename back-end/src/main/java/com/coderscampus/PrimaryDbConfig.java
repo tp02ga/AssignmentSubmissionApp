@@ -1,6 +1,7 @@
 package com.coderscampus;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -14,49 +15,39 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", basePackages = {
         "com.coderscampus.AssignmentSubmissionApp" })
+@Profile("local")
 public class PrimaryDbConfig {
 
     Logger log = LoggerFactory.getLogger(PrimaryDbConfig.class);
-    
+
     @Value("${DB_USERNAME}")
     private String dbUsername;
     @Value("${DB_PASSWORD}")
     private String dbPassword;
 
     @Primary
-    @Bean(name="dataSource")
+    @Bean(name = "dataSource")
     public DataSource getDataSource() {
-        String ip = "mysqldb"; 
-        try {
-            RestTemplate rt = new RestTemplate();
-            ResponseEntity<String> responseEntity = rt.getForEntity("http://169.254.169.254/latest/meta-data/public-ipv4",
-                    String.class);
-            ip = responseEntity.getBody() + ":3306";
-            
-        } catch (Exception e) {
-            log.warn("falling back to default mysql connection string");
-        }
-        log.info("Assignment Submission Primary external ip: " + ip);
+
         return DataSourceBuilder.create()
                 .driverClassName("com.mysql.cj.jdbc.Driver")
-                .url("jdbc:mysql://" + ip + "/assignment_submission_db")
+                .url("jdbc:mysql://host.docker.internal/assignment_submission_db")
                 .username(dbUsername)
                 .password(dbPassword)
                 .build();
     }
-    
 
     @Primary
     @Bean(name = "entityManagerFactory")
@@ -64,16 +55,23 @@ public class PrimaryDbConfig {
             EntityManagerFactoryBuilder builder,
             @Qualifier("dataSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = builder
-                        .dataSource(dataSource)
-                        .packages("com.coderscampus.AssignmentSubmissionApp")
-                        .persistenceUnit("AssignmentSubmissionApp")
-                        .build();
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.show-sql", "true");
-        em.setJpaProperties(properties);
-        
+                .dataSource(dataSource)
+                .packages("com.coderscampus.AssignmentSubmissionApp")
+                .persistenceUnit("AssignmentSubmissionApp")
+                .build();
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.show-sql", "true");
+        properties.put("hibernate.implicit_naming_strategy",
+                "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy");
+        properties.put("hibernate.physical_naming_strategy",
+                "org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy");
+        em.setJpaVendorAdapter(adapter);
+        em.getJpaPropertyMap().putAll(properties);
+
         return em;
     }
 

@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "proffessoEntityManagerFactory", transactionManagerRef = "proffessoTransactionManager", basePackages = {
         "com.coderscampus.proffesso" })
-@Profile("local")
-public class ProffessoDbConfig {
+@Profile("dev")
+public class ProffessoDbConfigDev {
     Logger log = LoggerFactory.getLogger(PrimaryDbConfig.class);
 
     @Value("${PROFFESSO_DB_USERNAME}")
@@ -40,7 +40,7 @@ public class ProffessoDbConfig {
 
         return DataSourceBuilder.create()
                 .driverClassName("com.mysql.cj.jdbc.Driver")
-                .url("jdbc:mysql://host.docker.internal/proffessoproddb")
+                .url("jdbc:mysql://mysql.cod3rscampus.com/proffessoproddb")
                 .username(dbUsername)
                 .password(dbPassword)
                 .build();

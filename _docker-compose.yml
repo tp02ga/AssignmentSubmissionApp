@@ -3,6 +3,7 @@ services:
     build:
       context: back-end
       dockerfile: Dockerfile
+      network: host
     ports:
       - 8080:8080
     environment:

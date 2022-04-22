@@ -41,3 +41,6 @@ front-end/Dockerfile.old
 back-end/src/main/resources/application.properties
 docker-compose.yml
 docker-compose-local.yml
+back-end/logs/spring-boot-logger.log
+_docker-compose.yml
+_docker-compose.yml

@@ -1,33 +1,13 @@
 services:
   back-end:
-    build:
-      context: back-end
-      dockerfile: Dockerfile
+    image: 851518566978.dkr.ecr.us-east-1.amazonaws.com/assignment-submission-backend-dev
     ports:
-      - 8080:8080
+      - 8081:8081
     environment:
-      DB_URL: jdbc:mysql://mysql-db/assignment_submission_db
+      DB_URL: jdbc:mysql://18.209.158.33:3306/assignment_submission_db
       DB_USERNAME: example_user
       DB_PASSWORD: password123
-    depends_on:
-      - mysql-container
   front-end:
-    build:
-      context: front-end
-      dockerfile: Dockerfile
+    image: 851518566978.dkr.ecr.us-east-1.amazonaws.com/assignment-submission-frontend-dev
     ports:
-      - 80:3000
-    depends_on:
-      - back-end
-  mysql-container:
-    image: mysql:8.0.28
-    volumes:
-      - dbdata:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: assignment_submission_db
-      MYSQL_ROOT_PASSWORD: root123
-      MYSQL_USER: example_user
-      MYSQL_PASSWORD: password123
-
-volumes:
-  dbdata:
+      - 3000:3000

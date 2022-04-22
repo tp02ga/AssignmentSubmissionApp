@@ -24,7 +24,7 @@ import com.coderscampus.AssignmentSubmissionApp.service.CommentService;
 
 @RestController
 @RequestMapping("/api/comments")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "https://assignments.cod3rscampus.com"}, allowCredentials = "true")
 public class CommentController {
 
     @Autowired
