@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../NavBar";
 import { useUser } from "../UserProvider";
 
 const Login = () => {
@@ -40,8 +41,9 @@ const Login = () => {
   }
   return (
     <>
-      <Container className="mt-5 ">
-        <Row className="justify-content-center">
+      <NavBar />
+      <Container>
+        <Row className="justify-content-center mt-5">
           <Col md="8" lg="6">
             <Form.Group className="mb-3" controlId="username">
               <Form.Label className="fs-4">Username</Form.Label>

@@ -9,7 +9,7 @@ import Homepage from "./Homepage";
 import Login from "./Login";
 import Register from "./Register";
 import PrivateRoute from "./PrivateRoute";
-import "bootstrap/dist/css/bootstrap.min.css";
+import "./custom.scss";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
 import { useUser } from "./UserProvider";
 

@@ -19,3 +19,19 @@
   padding: 1em;
   margin: 1em 0em;
 }
+
+.logo {
+  padding: 0.5em 0em;
+  max-width: 10em;
+}
+
+.nav {
+  min-height: 100px;
+  border-bottom: 1px solid grey;
+
+  width: 100%;
+}
+
+.NavBar {
+  padding-top: 25px;
+}
