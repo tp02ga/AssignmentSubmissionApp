@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../NavBar";
@@ -36,7 +36,10 @@ const Login = () => {
         }
       })
       .then((data) => {
-        if (data) navigate("/dashboard");
+        if (data) {
+          user.setJwt(data);
+          navigate("/dashboard");
+        }
       });
   }
   return (

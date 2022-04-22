@@ -7,7 +7,6 @@ import Dashboard from "./Dashboard";
 import CodeReviewerDashboard from "./CodeReviewerDashboard";
 import Homepage from "./Homepage";
 import Login from "./Login";
-import Register from "./Register";
 import PrivateRoute from "./PrivateRoute";
 import "./custom.scss";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
@@ -24,7 +23,6 @@ function App() {
   function getRolesFromJWT() {
     if (user.jwt) {
       const decodedJwt = jwt_decode(user.jwt);
-
       return decodedJwt.authorities;
     }
     return [];
@@ -61,7 +59,6 @@ function App() {
       />
       <Route path="login" element={<Login />} />
       <Route path="/" element={<Homepage />} />
-      <Route path="/register" element={<Register />} />
     </Routes>
   );
 }

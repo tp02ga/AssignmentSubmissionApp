@@ -13,6 +13,10 @@
   white-space: nowrap !important;
 }
 
+.link {
+  text-decoration: none;
+  cursor: pointer;
+}
 .comment-bubble {
   background: #eeeeee;
   border-radius: 1em;
