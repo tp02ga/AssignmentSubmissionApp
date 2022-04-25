@@ -25,7 +25,6 @@ public class ProffessoUser {
     @JsonIgnore
     private String password;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-    @JsonIgnore
     private Set<Authority> authorities = new HashSet<>();
     private String name;
 

@@ -9,6 +9,8 @@ import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "authorities")
 public class Authorities implements GrantedAuthority {
@@ -17,6 +19,7 @@ public class Authorities implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JsonIgnore
     private User user;
     private String authority;
 

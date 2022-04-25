@@ -44,3 +44,4 @@ docker-compose-local.yml
 back-end/logs/spring-boot-logger.log
 _docker-compose.yml
 _docker-compose.yml
+*.log

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Badge, Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import jwt_decode from "jwt-decode";
 import ajax from "../Services/fetchService";
-import { useLocalState } from "../util/useLocalStorage";
 import StatusBadge from "../StatusBadge";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserProvider";
@@ -23,11 +22,11 @@ const CodeReviewerDashboard = () => {
 
   function claimAssignment(assignment) {
     const decodedJwt = jwt_decode(user.jwt);
-    const user = {
+    const codeReviewer = {
       username: decodedJwt.sub,
     };
 
-    assignment.codeReviewer = user;
+    assignment.codeReviewer = codeReviewer;
     // TODO: don't hardcode this status
     assignment.status = "In Review";
     ajax(`/api/assignments/${assignment.id}`, "PUT", user.jwt, assignment).then(
@@ -51,19 +50,6 @@ const CodeReviewerDashboard = () => {
     <>
       <NavBar />
       <Container>
-        <Row>
-          <Col>
-            <div
-              className="d-flex justify-content-end"
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                user.setJwt(null);
-              }}
-            >
-              Logout
-            </div>
-          </Col>
-        </Row>
         <Row>
           <Col>
             <div className="h1">Code Reviewer Dashboard</div>
@@ -97,6 +83,9 @@ const CodeReviewerDashboard = () => {
                         </p>
                         <p>
                           <b>Branch</b>: {assignment.branch}
+                        </p>
+                        <p>
+                          <b>Student</b>: {assignment.user.name}
                         </p>
                       </Card.Text>
 
@@ -159,6 +148,9 @@ const CodeReviewerDashboard = () => {
                         <p>
                           <b>Branch</b>: {assignment.branch}
                         </p>
+                        <p>
+                          <b>Student</b>: {assignment.user.name}
+                        </p>
                       </Card.Text>
 
                       <Button
@@ -208,13 +200,15 @@ const CodeReviewerDashboard = () => {
                         <p>
                           <b>Branch</b>: {assignment.branch}
                         </p>
+                        <p>
+                          <b>Student</b>: {assignment.user.name}
+                        </p>
                       </Card.Text>
 
                       <Button
                         variant="secondary"
                         onClick={() => {
                           navigate(`/assignments/${assignment.id}`);
-                          // window.location.href = `/assignments/${assignment.id}`;
                         }}
                       >
                         View

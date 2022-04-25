@@ -33,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (userOpt.isEmpty()) {
             // user exists in Proffesso but not here, this means we'll need to create an account
             //  for this user in this app
-            User user = new User(proffessoUserOpt.get());
+            User user = new User(proffessoUserOpt.get(), Optional.empty());
             user = userRepo.save(user);
             return user;
         } else {

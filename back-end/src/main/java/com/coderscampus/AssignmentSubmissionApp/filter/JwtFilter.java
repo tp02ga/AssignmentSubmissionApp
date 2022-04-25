@@ -20,15 +20,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.coderscampus.AssignmentSubmissionApp.domain.User;
+import com.coderscampus.AssignmentSubmissionApp.repository.UserRepository;
 import com.coderscampus.AssignmentSubmissionApp.util.JwtUtil;
 import com.coderscampus.proffesso.repository.ProffessoUserRepo;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     
+    
     @Autowired
     private ProffessoUserRepo proffessoUserRepo;
-    
+    @Autowired
+    private UserRepository userRepo;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -49,11 +52,13 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Get user identity and set it on the spring security context
         String token = jwtOpt.get().getValue();
+        Optional<User> appUserOpt = userRepo.findByUsername(jwtUtil.getUsernameFromToken(token));
+        
+        // Get user identity and set it on the spring security context
         UserDetails userDetails = proffessoUserRepo
                 .findByEmail(jwtUtil.getUsernameFromToken(token))
-                .map(proffessoUser -> new User(proffessoUser))
+                .map(proffessoUser -> new User(proffessoUser, appUserOpt))
                 .orElse(null);
         
         // Get jwt token and validate

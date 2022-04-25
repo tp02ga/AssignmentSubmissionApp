@@ -31,8 +31,12 @@ const Login = () => {
     })
       .then((response) => {
         if (response.status === 200) return response.text();
-        else {
+        else if (response.status === 401 || response.status === 403) {
           setErrorMsg("Invalid username or password");
+        } else {
+          setErrorMsg(
+            "Something went wrong, try again later or reach out to trevor@coderscampus.com"
+          );
         }
       })
       .then((data) => {

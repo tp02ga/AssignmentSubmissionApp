@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import Comment from "../Comment";
 import ajax from "../Services/fetchService";
 import { useUser } from "../UserProvider";
@@ -120,13 +120,18 @@ const CommentContainer = (props) => {
   return (
     <>
       <div className="mt-5">
-        <textarea
-          style={{ width: "100%", borderRadius: "0.25em" }}
-          onChange={(e) => updateComment(e.target.value)}
-          value={comment.text}
-        ></textarea>
-        <Button onClick={() => submitComment()}>Post Comment</Button>
+        <h4>Comments</h4>
       </div>
+      <Row>
+        <Col lg="8" md="10" sm="12">
+          <textarea
+            style={{ width: "100%", borderRadius: "0.25em" }}
+            onChange={(e) => updateComment(e.target.value)}
+            value={comment.text}
+          ></textarea>
+        </Col>
+      </Row>
+      <Button onClick={() => submitComment()}>Post Comment</Button>
       <div className="mt-5">
         {comments.map((comment) => (
           <Comment

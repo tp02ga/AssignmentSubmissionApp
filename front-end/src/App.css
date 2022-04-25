@@ -13,6 +13,10 @@
   white-space: nowrap !important;
 }
 
+.error {
+  color: red;
+}
+
 .link {
   text-decoration: none;
   cursor: pointer;

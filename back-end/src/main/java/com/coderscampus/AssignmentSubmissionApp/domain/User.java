@@ -1,6 +1,7 @@
 package com.coderscampus.AssignmentSubmissionApp.domain;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -28,12 +29,23 @@ public class User implements UserDetails {
     private Set<Authorities> authorities = new HashSet<>();
     
     public User () {}
-    public User (ProffessoUser proffessoUser) {
+    public User (ProffessoUser proffessoUser, Optional<User> appUserOpt) {
         proffessoUser.getAuthorities().stream()
         .forEach(auth -> {
             Authorities newAuth = new Authorities();
             newAuth.setAuthority(auth.getAuthority());
             newAuth.setUser(this);
+            this.getAuthorities().add(newAuth);
+        });
+        appUserOpt.ifPresent(appUser -> {
+            appUser.getAuthorities()
+                .stream()
+                .forEach(auth -> {
+                    Authorities newAuth = new Authorities();
+                    newAuth.setAuthority(auth.getAuthority());
+                    newAuth.setUser(this);
+                    this.getAuthorities().add(newAuth);
+                });
         });
         this.username = proffessoUser.getEmail();
         this.id = proffessoUser.getId();

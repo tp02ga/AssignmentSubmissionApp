@@ -1,25 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Badge,
-  Button,
-  ButtonGroup,
-  Col,
-  Container,
-  Dropdown,
-  DropdownButton,
-  Form,
-  Row,
-} from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import CommentContainer from "../CommentContainer";
 import NavBar from "../NavBar";
 import ajax from "../Services/fetchService";
+import { getButtonsByStatusAndRole } from "../Services/statusService";
 import StatusBadge from "../StatusBadge";
 import { useUser } from "../UserProvider";
-import { useLocalState } from "../util/useLocalStorage";
 
 const CodeReviewerAssignmentView = () => {
-  const navigate = useNavigate();
   const user = useUser();
   const assignmentId = window.location.href.split("/assignments/")[1];
   const [assignment, setAssignment] = useState({
@@ -27,10 +15,11 @@ const CodeReviewerAssignmentView = () => {
     githubUrl: "",
     number: null,
     status: null,
+    codeReviewVideoUrl: null,
   });
   const [assignmentEnums, setAssignmentEnums] = useState([]);
   const [assignmentStatuses, setAssignmentStatuses] = useState([]);
-
+  const [errorMsg, setErrorMsg] = useState("");
   const prevAssignmentValue = useRef(assignment);
 
   function updateAssignment(prop, value) {
@@ -40,6 +29,20 @@ const CodeReviewerAssignmentView = () => {
   }
 
   function save(status) {
+    setErrorMsg("");
+    console.log(
+      `Status: ${status}, codeReviewVideoUrl: ${assignment.codeReviewVideoUrl}`
+    );
+    if (
+      status === "Completed" &&
+      (assignment.codeReviewVideoUrl === null ||
+        assignment.codeReviewVideoUrl === "")
+    ) {
+      setErrorMsg(
+        "Please insert the URL to the video review for the student to watch."
+      );
+      return;
+    }
     if (status && assignment.status !== status) {
       updateAssignment("status", status);
     } else {
@@ -90,6 +93,10 @@ const CodeReviewerAssignmentView = () => {
             <StatusBadge text={assignment.status} />
           </Col>
         </Row>
+        <Row>
+          <Col className="error">{errorMsg}</Col>
+        </Row>
+
         {assignment ? (
           <>
             <Form.Group as={Row} className="my-3" controlId="githubUrl">
@@ -141,48 +148,18 @@ const CodeReviewerAssignmentView = () => {
             </Form.Group>
 
             <div className="d-flex gap-5">
-              {assignment.status === "Completed" ? (
+              {getButtonsByStatusAndRole(
+                assignment.status,
+                "code_reviewer"
+              ).map((btn) => (
                 <Button
                   size="lg"
-                  variant="secondary"
-                  onClick={() => save(assignmentStatuses[2].status)}
+                  variant={btn.variant}
+                  onClick={() => save(btn.nextStatus)}
                 >
-                  Re-Claim
+                  {btn.text}
                 </Button>
-              ) : (
-                <Button
-                  size="lg"
-                  onClick={() => save(assignmentStatuses[4].status)}
-                >
-                  Complete Review
-                </Button>
-              )}
-
-              {assignment.status === "Needs Update" ? (
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  onClick={() => save(assignmentStatuses[2].status)}
-                >
-                  Re-Claim
-                </Button>
-              ) : (
-                <Button
-                  size="lg"
-                  variant="danger"
-                  onClick={() => save(assignmentStatuses[3].status)}
-                >
-                  Reject Assignment
-                </Button>
-              )}
-
-              <Button
-                size="lg"
-                variant="secondary"
-                onClick={() => navigate("/dashboard")}
-              >
-                Back
-              </Button>
+              ))}
             </div>
 
             <CommentContainer assignmentId={assignmentId} />

@@ -23,6 +23,7 @@ function NavBar() {
             style={{ marginRight: "3em" }}
             onClick={() => {
               user.setJwt(null);
+              navigate("/");
             }}
           >
             Logout

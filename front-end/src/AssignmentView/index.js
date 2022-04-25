@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useUser } from "../UserProvider";
 import CommentContainer from "../CommentContainer";
 import NavBar from "../NavBar";
+import { getButtonsByStatusAndRole } from "../Services/statusService";
 
 const AssignmentView = () => {
   let navigate = useNavigate();
@@ -153,63 +154,22 @@ const AssignmentView = () => {
               </Col>
             </Form.Group>
 
-            {assignment.status === "Completed" ? (
-              <>
-                <Form.Group
-                  as={Row}
-                  className="d-flex align-items-center mb-3"
-                  controlId="codeReviewVideoUrl"
-                >
-                  <Form.Label column sm="3" md="2">
-                    Code Review Video URL:
-                  </Form.Label>
-                  <Col sm="9" md="8" lg="6">
-                    <a
-                      href={assignment.codeReviewVideoUrl}
-                      style={{ fontWeight: "bold" }}
-                    >
-                      {assignment.codeReviewVideoUrl}
-                    </a>
-                  </Col>
-                </Form.Group>
-                <div className="d-flex gap-5">
+            <div className="d-flex gap-5">
+              {getButtonsByStatusAndRole(assignment.status, "student").map(
+                (btn) => (
                   <Button
                     size="lg"
-                    variant="secondary"
-                    onClick={() => navigate("/dashboard")}
+                    variant={btn.variant}
+                    onClick={() => {
+                      if (btn.nextStatus === "Same") persist();
+                      else save(btn.nextStatus);
+                    }}
                   >
-                    Back
+                    {btn.text}
                   </Button>
-                </div>
-              </>
-            ) : assignment.status === "Pending Submission" ? (
-              <div className="d-flex gap-5">
-                <Button size="lg" onClick={() => save("Submitted")}>
-                  Submit Assignment
-                </Button>
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  onClick={() => navigate("/dashboard")}
-                >
-                  Back
-                </Button>
-              </div>
-            ) : (
-              <div className="d-flex gap-5">
-                <Button size="lg" onClick={() => save("Resubmitted")}>
-                  Resubmit Assignment
-                </Button>
-                <Button
-                  size="lg"
-                  variant="secondary"
-                  onClick={() => navigate("/dashboard")}
-                >
-                  Back
-                </Button>
-              </div>
-            )}
-
+                )
+              )}
+            </div>
             <CommentContainer assignmentId={assignmentId} />
           </>
         ) : (

@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Authority implements GrantedAuthority {
     private static final long serialVersionUID = -6520888182797362903L;
@@ -16,6 +18,7 @@ public class Authority implements GrantedAuthority {
     private Long id;
     private String authority;
     @ManyToOne(optional = false)
+    @JsonIgnore
     private ProffessoUser user;
     
     public Authority () {}
