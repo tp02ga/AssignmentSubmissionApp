@@ -3,6 +3,8 @@ package com.coderscampus.AssignmentSubmissionApp.service;
 import java.util.Optional;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,7 @@ import com.coderscampus.AssignmentSubmissionApp.repository.AssignmentRepository;
 
 @Service
 public class AssignmentService {
-
+    private Logger log = LoggerFactory.getLogger(AssignmentService.class);
     @Autowired
     private AssignmentRepository assignmentRepo;
 
@@ -55,9 +57,11 @@ public class AssignmentService {
             .filter(auth -> AuthorityEnum.ROLE_CODE_REVIEWER.name().equals(auth.getAuthority()))
             .count() > 0;
         if (hasCodeReviewerRole) {
+            log.debug("User " + user.getUsername() + " has Code Reviewer role.");
             // load assignments if you're a code reviewer role
             return assignmentRepo.findByCodeReviewer(user);
         } else {
+            log.debug("User " + user.getUsername() + " is student.");
             // load assignments if you're a student role
             return assignmentRepo.findByUser(user);
         }

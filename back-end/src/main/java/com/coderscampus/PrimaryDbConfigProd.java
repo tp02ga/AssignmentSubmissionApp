@@ -27,10 +27,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", basePackages = {
         "com.coderscampus.AssignmentSubmissionApp" })
-@Profile("dev")
-public class PrimaryDbConfigDev {
+@Profile("prod")
+public class PrimaryDbConfigProd {
 
-    Logger log = LoggerFactory.getLogger(PrimaryDbConfigDev.class);
+    Logger log = LoggerFactory.getLogger(PrimaryDbConfigProd.class);
 
     @Value("${DB_USERNAME}")
     private String dbUsername;

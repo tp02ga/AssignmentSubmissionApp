@@ -36,14 +36,16 @@ public class PrimaryDbConfig {
     private String dbUsername;
     @Value("${DB_PASSWORD}")
     private String dbPassword;
-
+    @Value("${DB_URL}")
+    private String dbUrl;
+    
     @Primary
     @Bean(name = "dataSource")
     public DataSource getDataSource() {
 
         return DataSourceBuilder.create()
                 .driverClassName("com.mysql.cj.jdbc.Driver")
-                .url("jdbc:mysql://host.docker.internal/assignment_submission_db")
+                .url(dbUrl)
                 .username(dbUsername)
                 .password(dbPassword)
                 .build();
@@ -64,7 +66,6 @@ public class PrimaryDbConfig {
         Map<String, String> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
         properties.put("hibernate.hbm2ddl.auto", "update");
-        properties.put("hibernate.show-sql", "true");
         properties.put("hibernate.implicit_naming_strategy",
                 "org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy");
         properties.put("hibernate.physical_naming_strategy",

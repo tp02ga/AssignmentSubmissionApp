@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button, Image } from "react-bootstrap";
 import logo from "../Images/coders-campus-logo.png";
 import { useUser } from "../UserProvider";
+import ajax from "../Services/fetchService";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -10,20 +11,25 @@ function NavBar() {
   const user = useUser();
 
   return (
-    <div className="NavBar nav d-flex justify-content-end">
-      <div style={{ position: "fixed", left: "2em" }}>
+    <div className="NavBar nav d-flex justify-content-around justify-content-lg-between">
+      <div className="ms-md-5">
         <Link to="/">
           <Image src={logo} alt="logo" className="logo" />
         </Link>
       </div>
-      <div className="" style={{ marginRight: "3em" }}>
+      <div>
         {user && user.jwt ? (
           <span
             className="link"
-            style={{ marginRight: "3em" }}
             onClick={() => {
-              user.setJwt(null);
-              navigate("/");
+              // TODO: have this delete cookie on server side
+              fetch("/api/auth/logout").then((response) => {
+                console.log(response);
+                if (response.status === 200) {
+                  user.setJwt(null);
+                  navigate("/");
+                }
+              });
             }}
           >
             Logout
@@ -31,6 +37,7 @@ function NavBar() {
         ) : pathname !== "/login" ? (
           <Button
             variant="primary"
+            className="me-5"
             onClick={() => {
               navigate("/login");
             }}
@@ -43,6 +50,7 @@ function NavBar() {
 
         {user && user.jwt ? (
           <Button
+            className="ms-5 ms-md-5 me-md-5"
             onClick={() => {
               navigate("/dashboard");
             }}

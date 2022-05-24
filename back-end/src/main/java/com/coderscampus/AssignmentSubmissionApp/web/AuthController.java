@@ -30,7 +30,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "https://assignments.cod3rscampus.com"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "https://assignments.coderscampus.com"}, allowCredentials = "true")
 public class AuthController {
 
     private Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -40,8 +40,6 @@ public class AuthController {
     private JwtUtil jwtUtil;
     @Value("${cookies.domain}")
     private String domain;
-    @Value("${cookies.protocol")
-    private String protocol;
 
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody AuthCredentialsRequest request) {
@@ -56,9 +54,7 @@ public class AuthController {
 
             String token = jwtUtil.generateToken(user);
             ResponseCookie cookie = ResponseCookie.from("jwt", token)
-//                    .domain(domain)
-//                    .httpOnly(true)
-//                    .secure(true)
+                    .domain(domain)
                     .path("/")
                     .maxAge(Duration.buildByDays(365).getMilliseconds())
                     .build();
@@ -79,5 +75,16 @@ public class AuthController {
         } catch (ExpiredJwtException e) {
             return ResponseEntity.ok(false);
         }
+    }
+    
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout () {
+        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                .domain(domain)
+                .path("/")
+                .maxAge(0)
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString()).body("ok");
     }
 }

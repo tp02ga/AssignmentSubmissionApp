@@ -70,6 +70,7 @@ const CodeReviewerAssignmentView = () => {
         let assignmentData = assignmentResponse.assignment;
         if (assignmentData.branch === null) assignmentData.branch = "";
         if (assignmentData.githubUrl === null) assignmentData.githubUrl = "";
+        console.log("Assignment data: ", assignmentData);
         setAssignment(assignmentData);
         setAssignmentEnums(assignmentResponse.assignmentEnums);
         setAssignmentStatuses(assignmentResponse.statusEnums);
@@ -99,6 +100,22 @@ const CodeReviewerAssignmentView = () => {
 
         {assignment ? (
           <>
+            {assignment.user ? (
+              <Form.Group as={Row} className="my-3" controlId="githubUrl">
+                <Form.Label column sm="3" md="2">
+                  Student Name:
+                </Form.Label>
+                <Col sm="9" md="8" lg="6">
+                  <Form.Control
+                    type="text"
+                    readOnly
+                    value={assignment.user.name}
+                  />
+                </Col>
+              </Form.Group>
+            ) : (
+              <></>
+            )}
             <Form.Group as={Row} className="my-3" controlId="githubUrl">
               <Form.Label column sm="3" md="2">
                 GitHub URL:

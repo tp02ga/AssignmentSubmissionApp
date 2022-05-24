@@ -38,7 +38,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return user;
         } else {
             // TODO: Check that proffesso user and this app's user are in sync.
-            return userOpt.get();
+            User user = new User(proffessoUserOpt.get(), userOpt);
+            user = userRepo.save(user);
+            return user;
         }
         
     }

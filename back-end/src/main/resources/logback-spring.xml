@@ -38,6 +38,13 @@
         <appender-ref ref="Console" />
     </root>
  
+   <logger name="org.hibernate.SQL" level="DEBUG" />
+   
+   <!-- Used to show the values that go into the (?,?,?) in SQL statements, too noise
+        to leave on all the time, only uncomment when needed -->
+<!--     <logger name="org.hibernate.type" level="TRACE" /> -->
+
+
     <!-- LOG "com.baeldung*" at TRACE level -->
     <logger name="com.coderscampus" level="debug" additivity="false">
         <appender-ref ref="RollingFile" />

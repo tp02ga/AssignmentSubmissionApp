@@ -25,7 +25,7 @@ import com.coderscampus.AssignmentSubmissionApp.util.AuthorityUtil;
 
 @RestController
 @RequestMapping("/api/assignments")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "https://assignments.cod3rscampus.com"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "https://assignments.coderscampus.com"}, allowCredentials = "true")
 public class AssignmentController {
 
     @Autowired
