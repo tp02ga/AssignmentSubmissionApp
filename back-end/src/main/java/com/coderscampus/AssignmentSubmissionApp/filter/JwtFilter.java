@@ -24,6 +24,9 @@ import com.coderscampus.AssignmentSubmissionApp.repository.UserRepository;
 import com.coderscampus.AssignmentSubmissionApp.util.JwtUtil;
 import com.coderscampus.proffesso.repository.ProffessoUserRepo;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.SignatureException;
+
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     
@@ -53,13 +56,17 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String token = jwtOpt.get().getValue();
-        Optional<User> appUserOpt = userRepo.findByUsername(jwtUtil.getUsernameFromToken(token));
-        
-        // Get user identity and set it on the spring security context
-        UserDetails userDetails = proffessoUserRepo
-                .findByEmail(jwtUtil.getUsernameFromToken(token))
-                .map(proffessoUser -> new User(proffessoUser, appUserOpt))
-                .orElse(null);
+        UserDetails userDetails = null;
+        try {
+            Optional<User> appUserOpt = userRepo.findByUsername(jwtUtil.getUsernameFromToken(token));
+            userDetails = proffessoUserRepo
+                    .findByEmail(jwtUtil.getUsernameFromToken(token))
+                    .map(proffessoUser -> new User(proffessoUser, appUserOpt))
+                    .orElse(null);
+        } catch (ExpiredJwtException | SignatureException e) {
+            chain.doFilter(request, response);
+            return;
+        }
         
         // Get jwt token and validate
         if (!jwtUtil.validateToken(token, userDetails)) {
