@@ -44,10 +44,7 @@ const Dashboard = () => {
           >
             {assignments.map((assignment) => (
               // <Col>
-              <Card
-                key={assignment.id}
-                style={{ width: "18rem", height: "18rem" }}
-              >
+              <Card key={assignment.id} style={{ width: "18rem" }}>
                 <Card.Body className="d-flex flex-column justify-content-around">
                   <Card.Title>Assignment #{assignment.number}</Card.Title>
                   <div className="d-flex align-items-start">
@@ -63,15 +60,35 @@ const Dashboard = () => {
                     </p>
                   </Card.Text>
 
-                  <Button
-                    variant="secondary"
-                    onClick={() => {
-                      navigate(`/assignments/${assignment.id}`);
-                      // window.location.href = `/assignments/${assignment.id}`;
-                    }}
-                  >
-                    Edit
-                  </Button>
+                  {assignment && assignment.status === "Completed" ? (
+                    <>
+                      <Button
+                        onClick={() => {
+                          window.open(assignment.codeReviewVideoUrl);
+                        }}
+                        className="mb-4"
+                      >
+                        Watch Review
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        onClick={() => {
+                          navigate(`/assignments/${assignment.id}`);
+                        }}
+                      >
+                        View
+                      </Button>
+                    </>
+                  ) : (
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        navigate(`/assignments/${assignment.id}`);
+                      }}
+                    >
+                      Edit
+                    </Button>
+                  )}
                 </Card.Body>
               </Card>
               // </Col>

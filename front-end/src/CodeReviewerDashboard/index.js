@@ -67,10 +67,7 @@ const CodeReviewerDashboard = () => {
               {assignments
                 .filter((assignment) => assignment.status === "In Review")
                 .map((assignment) => (
-                  <Card
-                    key={assignment.id}
-                    style={{ width: "18rem", height: "18rem" }}
-                  >
+                  <Card key={assignment.id} style={{ width: "18rem" }}>
                     <Card.Body className="d-flex flex-column justify-content-around">
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
                       <div className="d-flex align-items-start">
@@ -131,10 +128,7 @@ const CodeReviewerDashboard = () => {
                   else return 1;
                 })
                 .map((assignment) => (
-                  <Card
-                    key={assignment.id}
-                    style={{ width: "18rem", height: "18rem" }}
-                  >
+                  <Card key={assignment.id} style={{ width: "18rem" }}>
                     <Card.Body className="d-flex flex-column justify-content-around">
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
                       <div className="d-flex align-items-start">
@@ -183,10 +177,7 @@ const CodeReviewerDashboard = () => {
               {assignments
                 .filter((assignment) => assignment.status === "Needs Update")
                 .map((assignment) => (
-                  <Card
-                    key={assignment.id}
-                    style={{ width: "18rem", height: "18rem" }}
-                  >
+                  <Card key={assignment.id} style={{ width: "18rem" }}>
                     <Card.Body className="d-flex flex-column justify-content-around">
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
                       <div className="d-flex align-items-start">
