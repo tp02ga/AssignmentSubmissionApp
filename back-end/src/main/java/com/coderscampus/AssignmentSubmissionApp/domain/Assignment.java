@@ -1,10 +1,7 @@
 package com.coderscampus.AssignmentSubmissionApp.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity // will create table called assignment (based on Class name)
 public class Assignment {
@@ -21,6 +18,7 @@ public class Assignment {
     private User user;
     @ManyToOne
     private User codeReviewer;
+    private LocalDateTime submittedDate;
 
     public Long getId() {
         return id;
@@ -86,4 +84,11 @@ public class Assignment {
         this.codeReviewer = codeReviewer;
     }
 
+    public LocalDateTime getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public void setSubmittedDate(LocalDateTime submittedDate) {
+        this.submittedDate = submittedDate;
+    }
 }

@@ -125,7 +125,11 @@ const CodeReviewerDashboard = () => {
                 )
                 .sort((a, b) => {
                   if (a.status === "Resubmitted") return -1;
-                  else return 1;
+                  if (a.submittedDate && b.submittedDate) {
+                    return (
+                      new Date(a.submittedDate) - new Date(b.submittedDate)
+                    );
+                  } else return 1;
                 })
                 .map((assignment) => (
                   <Card key={assignment.id} style={{ width: "18rem" }}>
