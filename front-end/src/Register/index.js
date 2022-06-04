@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
 import { Button, Col, Container, Row, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+
 import { useUser } from "../UserProvider";
 
 const Register = () => {
@@ -50,7 +51,9 @@ const Register = () => {
             <Form.Group className="mb-3" controlId="name">
               <Form.Label className="fs-4">Full Name</Form.Label>
               <Form.Control
+
                 type="text"
+
                 size="lg"
                 placeholder="John Doe"
                 value={name}
@@ -99,7 +102,9 @@ const Register = () => {
               id="submit"
               type="button"
               size="lg"
+
               onClick={() => createAndLoginUser()}
+
             >
               Register
             </Button>
