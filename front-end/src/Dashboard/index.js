@@ -6,7 +6,6 @@ import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
 import { useUser } from "../UserProvider";
 
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const user = useUser();
@@ -33,19 +32,17 @@ const Dashboard = () => {
     <>
       <NavBar />
       <div style={{ margin: "2em" }}>
-        <div className="mb-5">
-          <Button size="lg" onClick={() => createAssignment()}>
-            Submit New Assignment
-          </Button>
-        </div>
-        {assignments ? (
-          <div
-            className="d-grid gap-5"
-            style={{ gridTemplateColumns: "repeat(auto-fit, 18rem)" }}
-          >
-            {assignments.map((assignment) => (
+        <div
+          className="d-grid gap-5"
+          style={{ gridTemplateColumns: "repeat(auto-fit, 18rem)" }}
+        >
+          {assignments &&
+            assignments.map((assignment) => (
               // <Col>
-              <Card key={assignment.id} style={{ width: "18rem" }}>
+              <Card
+                key={assignment.id}
+                style={{ width: "18rem", height: "20rem" }}
+              >
                 <Card.Body className="d-flex flex-column justify-content-around">
                   <Card.Title>Assignment #{assignment.number}</Card.Title>
                   <div className="d-flex align-items-start">
@@ -94,10 +91,14 @@ const Dashboard = () => {
               </Card>
               // </Col>
             ))}
-          </div>
-        ) : (
-          <></>
-        )}
+          <Card style={{ width: "18rem", height: "20rem" }}>
+            <Card.Body className="d-flex flex-column justify-content-around">
+              <Button size="lg" onClick={() => createAssignment()}>
+                Submit New Assignment
+              </Button>
+            </Card.Body>
+          </Card>
+        </div>
       </div>
     </>
   );
