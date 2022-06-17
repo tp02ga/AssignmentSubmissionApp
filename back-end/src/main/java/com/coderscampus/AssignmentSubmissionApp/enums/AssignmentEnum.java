@@ -17,12 +17,13 @@ public enum AssignmentEnum {
     ASSIGNMENT_11(11, "Full-Stack with Thymeleaf"),
     ASSIGNMENT_12(12, "Reports with SQL"),
     ASSIGNMENT_13(13, "Online Bank"),
-    ASSIGNMENT_14(14, "Chatting with JS");
-    
+    ASSIGNMENT_14(14, "Chatting with JS"),
+    FINAL_PROJECT(15, "Final Project");
+
     private int assignmentNum;
     private String assignmentName;
-    
-    AssignmentEnum (int assignmentNum, String assignmentName) {
+
+    AssignmentEnum(int assignmentNum, String assignmentName) {
         this.assignmentNum = assignmentNum;
         this.assignmentName = assignmentName;
     }

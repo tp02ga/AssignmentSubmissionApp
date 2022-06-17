@@ -73,6 +73,7 @@ const AssignmentView = () => {
         if (assignmentData.githubUrl === null) assignmentData.githubUrl = "";
         setAssignment(assignmentData);
         setAssignmentEnums(assignmentResponse.assignmentEnums);
+        console.log(assignmentResponse.assignmentEnums);
         setAssignmentStatuses(assignmentResponse.statusEnums);
       }
     );
@@ -84,14 +85,17 @@ const AssignmentView = () => {
       <Container className="mt-5">
         <Row className="d-flex align-items-center">
           <Col>
-            {assignment.number ? (
-              <h1>Assignment {assignment.number} </h1>
+            {assignment && assignment.number && assignmentEnums.length > 0 ? (
+              <>
+                <h1>Assignment {assignment.number}</h1>
+                <h4>{assignmentEnums[assignment.number - 1].assignmentName}</h4>
+              </>
             ) : (
               <></>
             )}
           </Col>
           <Col>
-            <StatusBadge text={assignment.status} />
+            {assignment ? <StatusBadge text={assignment.status} /> : <></>}
           </Col>
         </Row>
         {assignment ? (
@@ -159,6 +163,7 @@ const AssignmentView = () => {
                 (btn) => (
                   <Button
                     size="lg"
+                    key={btn.text}
                     variant={btn.variant}
                     onClick={() => {
                       if (btn.nextStatus === "Same") persist();

@@ -58,7 +58,10 @@ const CodeReviewerAssignmentView = () => {
     );
   }
   useEffect(() => {
-    if (prevAssignmentValue.current.status !== assignment.status) {
+    if (
+      assignment &&
+      prevAssignmentValue.current.status !== assignment.status
+    ) {
       persist();
     }
     prevAssignmentValue.current = assignment;
@@ -84,14 +87,14 @@ const CodeReviewerAssignmentView = () => {
       <Container className="mt-5">
         <Row className="d-flex align-items-center">
           <Col>
-            {assignment.number ? (
+            {assignment && assignment.number ? (
               <h1>Assignment {assignment.number} </h1>
             ) : (
               <></>
             )}
           </Col>
           <Col>
-            <StatusBadge text={assignment.status} />
+            {assignment ? <StatusBadge text={assignment.status} /> : <></>}
           </Col>
         </Row>
         <Row>

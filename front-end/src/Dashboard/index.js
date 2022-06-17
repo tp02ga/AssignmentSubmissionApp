@@ -5,14 +5,34 @@ import NavBar from "../NavBar";
 import ajax from "../Services/fetchService";
 import StatusBadge from "../StatusBadge";
 import { useUser } from "../UserProvider";
+import MultiColorProgressBar from "../MultiColorProgressBar";
+import jwt_decode from "jwt-decode";
+import { getDueDates } from "../Services/assignmentDueDatesService";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const user = useUser();
   const [assignments, setAssignments] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [asignmentDueDates, setAssignmentDueDates] = useState(null);
 
   useEffect(() => {
-    console.log("Value of user", user);
+    const decodedJwt = jwt_decode(user.jwt);
+    if (!userData && assignments) {
+      ajax("api/users/" + decodedJwt.sub, "GET", user.jwt).then((data) => {
+        setUserData(data);
+        let dueDates = getDueDates(
+          data.cohortStartDate,
+          data.bootcampDurationInWeeks,
+          assignments
+        );
+
+        setAssignmentDueDates(dueDates);
+      });
+    }
+  }, [user, userData, assignments]);
+
+  useEffect(() => {
     ajax("api/assignments", "GET", user.jwt).then((assignmentsData) => {
       setAssignments(assignmentsData);
     });
@@ -32,6 +52,13 @@ const Dashboard = () => {
     <>
       <NavBar />
       <div style={{ margin: "2em" }}>
+        {asignmentDueDates ? (
+          <MultiColorProgressBar readings={asignmentDueDates} />
+        ) : (
+          <></>
+        )}
+
+        <div style={{ clear: "both", marginBottom: "3rem" }}></div>
         <div
           className="d-grid gap-5"
           style={{ gridTemplateColumns: "repeat(auto-fit, 18rem)" }}
@@ -50,12 +77,9 @@ const Dashboard = () => {
                   </div>
 
                   <Card.Text style={{ marginTop: "1em" }}>
-                    <p>
-                      <b>GitHub URL</b>: {assignment.githubUrl}
-                    </p>
-                    <p>
-                      <b>Branch</b>: {assignment.branch}
-                    </p>
+                    <b>GitHub URL</b>: {assignment.githubUrl}
+                    <br />
+                    <b>Branch</b>: {assignment.branch}
                   </Card.Text>
 
                   {assignment && assignment.status === "Completed" ? (

@@ -1,20 +1,15 @@
 package com.coderscampus.AssignmentSubmissionApp.domain;
 
+import com.coderscampus.proffesso.domain.ProffessoUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.springframework.security.core.userdetails.UserDetails;
-
-import com.coderscampus.proffesso.domain.ProffessoUser;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -28,9 +23,13 @@ public class User implements UserDetails {
     private String name;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Authorities> authorities = new HashSet<>();
-    
-    public User () {}
-    public User (ProffessoUser proffessoUser, Optional<User> appUserOpt) {
+    private LocalDate cohortStartDate;
+    private Integer bootcampDurationInWeeks;
+
+    public User() {
+    }
+
+    public User(ProffessoUser proffessoUser, Optional<User> appUserOpt) {
 //        proffessoUser.getAuthorities().stream()
 //        .forEach(auth -> {
 //            Authorities newAuth = new Authorities();
@@ -40,20 +39,40 @@ public class User implements UserDetails {
 //        });
         appUserOpt.ifPresent(appUser -> {
             appUser.getAuthorities()
-                .stream()
-                .forEach(auth -> {
-                    Authorities newAuth = new Authorities();
-                    newAuth.setAuthority(auth.getAuthority());
-                    newAuth.setUser(this);
-                    newAuth.setId(auth.getId());
-                    this.getAuthorities().add(newAuth);
-                });
+                    .stream()
+                    .forEach(auth -> {
+                        Authorities newAuth = new Authorities();
+                        newAuth.setAuthority(auth.getAuthority());
+                        newAuth.setUser(this);
+                        newAuth.setId(auth.getId());
+                        this.getAuthorities().add(newAuth);
+                    });
+            this.bootcampDurationInWeeks = appUser.getBootcampDurationInWeeks();
+            this.cohortStartDate = appUser.getCohortStartDate();
         });
         this.username = proffessoUser.getEmail();
         this.id = proffessoUser.getId();
         this.name = proffessoUser.getName();
         this.password = proffessoUser.getPassword();
+
     }
+
+    public Integer getBootcampDurationInWeeks() {
+        return bootcampDurationInWeeks;
+    }
+
+    public void setBootcampDurationInWeeks(Integer bootcampDurationInWeeks) {
+        this.bootcampDurationInWeeks = bootcampDurationInWeeks;
+    }
+
+    public LocalDate getCohortStartDate() {
+        return cohortStartDate;
+    }
+
+    public void setCohortStartDate(LocalDate cohortStartDate) {
+        this.cohortStartDate = cohortStartDate;
+    }
+
     public Long getId() {
         return id;
     }
@@ -96,6 +115,7 @@ public class User implements UserDetails {
     public void setUsername(String username) {
         this.username = username;
     }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -115,9 +135,16 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     @Override
     public String toString() {
-        return "User [username=" + username + "]";
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", cohortStartDate=" + cohortStartDate +
+                ", bootcampDuationInWeeks=" + bootcampDurationInWeeks +
+                '}';
     }
 
     @Override

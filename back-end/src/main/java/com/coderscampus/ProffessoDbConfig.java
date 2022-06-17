@@ -1,11 +1,5 @@
 package com.coderscampus;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,10 +16,15 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(entityManagerFactoryRef = "proffessoEntityManagerFactory", transactionManagerRef = "proffessoTransactionManager", basePackages = {
-        "com.coderscampus.proffesso" })
+        "com.coderscampus.proffesso"})
 @Profile("local")
 public class ProffessoDbConfig {
     Logger log = LoggerFactory.getLogger(PrimaryDbConfig.class);
@@ -40,11 +39,10 @@ public class ProffessoDbConfig {
 
         return DataSourceBuilder.create()
                 .driverClassName("com.mysql.cj.jdbc.Driver")
-                .url("jdbc:mysql://host.docker.internal/proffessoproddb")
+                .url("jdbc:mysql://localhost:3306/proffessoproddb")
                 .username(dbUsername)
                 .password(dbPassword)
                 .build();
-
     }
 
     @Bean(name = "proffessoEntityManagerFactory")
