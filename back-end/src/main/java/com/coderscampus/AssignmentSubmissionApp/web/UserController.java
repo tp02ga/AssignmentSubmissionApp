@@ -2,6 +2,7 @@ package com.coderscampus.AssignmentSubmissionApp.web;
 
 import com.coderscampus.AssignmentSubmissionApp.domain.User;
 import com.coderscampus.AssignmentSubmissionApp.dto.UserDto;
+import com.coderscampus.AssignmentSubmissionApp.dto.UserKeyDto;
 import com.coderscampus.AssignmentSubmissionApp.service.UserService;
 import com.coderscampus.AssignmentSubmissionApp.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -59,6 +62,14 @@ public class UserController {
         }
     }
 
+    @GetMapping("/non-configured")
+    public ResponseEntity<?> nonConfiguredStudents() {
+        List<User> nonConfiguredStudents = userService.findNonConfiguredStudents();
+        List<UserKeyDto> result = nonConfiguredStudents.stream()
+                .map(u -> new UserKeyDto(u.getUsername(), u.getName(), u.getCohortStartDate(), u.getBootcampDurationInWeeks()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
+    }
 }
 
 

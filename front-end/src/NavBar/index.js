@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button, Image } from "react-bootstrap";
 import logo from "../Images/coders-campus-logo.png";
 import { useUser } from "../UserProvider";
-import ajax from "../Services/fetchService";
+import jwt_decode from "jwt-decode";
 
 function NavBar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const user = useUser();
+  const [authorities, setAuthorities] = useState(null);
+
+  useEffect(() => {
+    if (user && user.jwt) {
+      const decodedJwt = jwt_decode(user.jwt);
+      console.log("jwt: ", decodedJwt);
+      setAuthorities(decodedJwt.authorities);
+    }
+  }, [user, user.jwt]);
 
   return (
     <div className="NavBar nav d-flex justify-content-around justify-content-lg-between">
@@ -43,6 +52,18 @@ function NavBar() {
           >
             Login
           </Button>
+        ) : (
+          <></>
+        )}
+
+        {authorities &&
+        authorities.filter((auth) => auth === "ROLE_INSTRUCTOR").length > 0 ? (
+          <Link
+            className="ms-5 ms-md-5 me-md-5 link"
+            to="/instructors/dashboard"
+          >
+            Instructors
+          </Link>
         ) : (
           <></>
         )}

@@ -11,6 +11,7 @@ import PrivateRoute from "./PrivateRoute";
 import "./custom.scss";
 import CodeReviewerAssignmentView from "./CodeReviewAssignmentView";
 import { useUser } from "./UserProvider";
+import InstructorDashboard from "./InstructorDashboard";
 
 function App() {
   const [roles, setRoles] = useState([]);
@@ -40,6 +41,18 @@ function App() {
             <PrivateRoute>
               <Dashboard />
             </PrivateRoute>
+          )
+        }
+      />
+      <Route
+        path="/instructors/dashboard"
+        element={
+          roles.find((role) => role === "ROLE_INSTRUCTOR") ? (
+            <PrivateRoute>
+              <InstructorDashboard />
+            </PrivateRoute>
+          ) : (
+            <div>You don't have the appropriate role. Talk to Trevor.</div>
           )
         }
       />

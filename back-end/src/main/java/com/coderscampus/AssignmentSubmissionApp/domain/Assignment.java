@@ -2,6 +2,7 @@ package com.coderscampus.AssignmentSubmissionApp.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity // will create table called assignment (based on Class name)
 public class Assignment {
@@ -86,6 +87,19 @@ public class Assignment {
 
     public LocalDateTime getSubmittedDate() {
         return submittedDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Assignment that = (Assignment) o;
+        return number.equals(that.number) && user.equals(that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number, user);
     }
 
     public void setSubmittedDate(LocalDateTime submittedDate) {

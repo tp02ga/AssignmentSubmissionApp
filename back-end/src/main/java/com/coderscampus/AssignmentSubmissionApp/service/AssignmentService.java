@@ -2,15 +2,17 @@ package com.coderscampus.AssignmentSubmissionApp.service;
 
 import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
 import com.coderscampus.AssignmentSubmissionApp.domain.User;
+import com.coderscampus.AssignmentSubmissionApp.dto.UserKeyDto;
 import com.coderscampus.AssignmentSubmissionApp.enums.AssignmentStatusEnum;
 import com.coderscampus.AssignmentSubmissionApp.enums.AuthorityEnum;
 import com.coderscampus.AssignmentSubmissionApp.repository.AssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AssignmentService {
@@ -46,6 +48,21 @@ public class AssignmentService {
             return assignment.getNumber() + 1;
         }).findFirst();
         return nextAssignmentNumOpt.orElse(1);
+    }
+
+    @Secured({"ROLE_INSTRUCTOR"})
+    public Map<UserKeyDto, Set<Assignment>> findAll() {
+        List<Assignment> assignments = assignmentRepo.findAllActiveBootcampStudents();
+
+        Map<UserKeyDto, Set<Assignment>> allStudentAssignments = assignments.stream()
+                .collect(Collectors.groupingBy(a -> new UserKeyDto(a.getUser().getUsername(),
+                                a.getUser().getName(),
+                                a.getUser().getCohortStartDate(),
+                                a.getUser().getBootcampDurationInWeeks()),
+                        Collectors.mapping(a -> a, Collectors.toSet())));
+
+        TreeMap<UserKeyDto, Set<Assignment>> sortedMap = new TreeMap<>(allStudentAssignments);
+        return sortedMap;
     }
 
     public Set<Assignment> findByUser(User user) {
@@ -92,5 +109,4 @@ public class AssignmentService {
 
         return newAssignment;
     }
-
 }

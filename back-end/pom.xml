@@ -21,6 +21,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/x
 
   <dependencies>
       <dependency>
+          <groupId>com.fasterxml.jackson.datatype</groupId>
+          <artifactId>jackson-datatype-jsr310</artifactId>
+      </dependency>
+      <dependency>
           <groupId>org.json</groupId>
           <artifactId>json</artifactId>
           <version>20220320</version>
