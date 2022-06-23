@@ -5,7 +5,6 @@ class MultiColorProgressBar extends React.Component {
   render() {
     const parent = this.props;
 
-    console.log("MultiProgressBar with ", parent);
     let values =
       parent.readings &&
       parent.readings.length &&
@@ -52,22 +51,6 @@ class MultiColorProgressBar extends React.Component {
               style={{ backgroundColor: item.color, width: item.value + "%" }}
               key={i}
             ></div>
-          );
-        }
-      }, this);
-
-    let legends =
-      parent.readings &&
-      parent.readings.length &&
-      parent.readings.map(function (item, i) {
-        if (item.value > 0) {
-          return (
-            <div className="legend" key={i}>
-              <span className="dot" style={{ color: item.color }}>
-                ●
-              </span>
-              <span className="label">{item.name}</span>
-            </div>
           );
         }
       }, this);

@@ -44,10 +44,6 @@ const CommentContainer = (props) => {
     setComment(commentCopy);
   }
 
-  useEffect(() => {
-    console.log(comment);
-  }, [comment]);
-
   function handleDeleteComment(commentId) {
     // TODO: send DELETE request to server
     ajax(`/api/comments/${commentId}`, "delete", user.jwt).then((msg) => {
@@ -60,15 +56,7 @@ const CommentContainer = (props) => {
   function formatComments(commentsCopy) {
     commentsCopy.forEach((comment) => {
       if (typeof comment.createDate === "string") {
-        console.log(
-          "BEFORE Converting string date to dayjs date",
-          comment.createdDate
-        );
         comment.createDate = dayjs(comment.createDate);
-        console.log(
-          "AFTER Converting string date to dayjs date",
-          comment.createdDate
-        );
       }
     });
     setComments(commentsCopy);

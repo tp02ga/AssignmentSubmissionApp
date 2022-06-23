@@ -3,9 +3,7 @@ import Cookies from "js-cookie";
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
-  console.log("All Cookies", Cookies.get());
   const [jwt, setJwt] = useState(Cookies.get("jwt"));
-  console.log("jwt value in UserProvider is: ", jwt);
 
   const value = { jwt, setJwt };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

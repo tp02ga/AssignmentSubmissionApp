@@ -24,7 +24,6 @@ function NavBar() {
             onClick={() => {
               // TODO: have this delete cookie on server side
               fetch("/api/auth/logout").then((response) => {
-                console.log(response);
                 if (response.status === 200) {
                   user.setJwt(null);
                   navigate("/");

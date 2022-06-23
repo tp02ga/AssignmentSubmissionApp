@@ -73,7 +73,6 @@ const AssignmentView = () => {
         if (assignmentData.githubUrl === null) assignmentData.githubUrl = "";
         setAssignment(assignmentData);
         setAssignmentEnums(assignmentResponse.assignmentEnums);
-        console.log(assignmentResponse.assignmentEnums);
         setAssignmentStatuses(assignmentResponse.statusEnums);
       }
     );

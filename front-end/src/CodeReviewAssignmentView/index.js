@@ -30,9 +30,6 @@ const CodeReviewerAssignmentView = () => {
 
   function save(status) {
     setErrorMsg("");
-    console.log(
-      `Status: ${status}, codeReviewVideoUrl: ${assignment.codeReviewVideoUrl}`
-    );
     if (
       status === "Completed" &&
       (assignment.codeReviewVideoUrl === null ||
@@ -73,7 +70,7 @@ const CodeReviewerAssignmentView = () => {
         let assignmentData = assignmentResponse.assignment;
         if (assignmentData.branch === null) assignmentData.branch = "";
         if (assignmentData.githubUrl === null) assignmentData.githubUrl = "";
-        console.log("Assignment data: ", assignmentData);
+
         setAssignment(assignmentData);
         setAssignmentEnums(assignmentResponse.assignmentEnums);
         setAssignmentStatuses(assignmentResponse.statusEnums);
