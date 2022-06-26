@@ -40,6 +40,22 @@ public class UserKeyDto implements Comparable<UserKeyDto> {
         return name;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setBootcampDurationInWeeks(Integer bootcampDurationInWeeks) {
+        this.bootcampDurationInWeeks = bootcampDurationInWeeks;
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();

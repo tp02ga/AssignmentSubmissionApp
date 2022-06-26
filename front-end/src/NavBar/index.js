@@ -14,7 +14,6 @@ function NavBar() {
   useEffect(() => {
     if (user && user.jwt) {
       const decodedJwt = jwt_decode(user.jwt);
-      console.log("jwt: ", decodedJwt);
       setAuthorities(decodedJwt.authorities);
     }
   }, [user, user.jwt]);

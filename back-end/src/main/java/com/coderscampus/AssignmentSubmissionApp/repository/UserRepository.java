@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "join u.authorities auth " +
             "where u.cohortStartDate is null or u.bootcampDurationInWeeks is null ")
     List<User> findAllInactiveBootcampStudents();
+
+
 }

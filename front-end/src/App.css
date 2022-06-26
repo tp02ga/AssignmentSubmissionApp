@@ -20,6 +20,12 @@
 .link {
   text-decoration: none;
   cursor: pointer;
+  color: black;
+}
+.blue-link {
+  text-decoration: none;
+  cursor: pointer;
+  color: blue;
 }
 .comment-bubble {
   background: #eeeeee;

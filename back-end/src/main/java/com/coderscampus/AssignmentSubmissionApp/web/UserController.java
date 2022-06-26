@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,6 +36,14 @@ public class UserController {
         Optional<User> userByUsername = userService.findUserByUsername(email);
         System.out.println(userByUsername);
         return ResponseEntity.ok(userByUsername);
+    }
+
+    @PutMapping("{email}")
+    @Secured({"ROLE_INSTRUCTOR"})
+    public ResponseEntity<?> saveUser(@RequestBody UserKeyDto user) {
+        System.out.println("Got user: " + user);
+        userService.updateUser(user);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/register")
@@ -69,6 +78,13 @@ public class UserController {
                 .map(u -> new UserKeyDto(u.getUsername(), u.getName(), u.getCohortStartDate(), u.getBootcampDurationInWeeks()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/bootcamp-students")
+    public ResponseEntity<?> getBootcampStudents() {
+        List<UserKeyDto> bootcampStudents = userService.findBootcampStudents();
+
+        return ResponseEntity.ok(bootcampStudents);
     }
 }
 

@@ -1,4 +1,10 @@
 td,
 th {
-  padding: 0 15px;
+  padding: 3px 15px;
+}
+tr:nth-child(even) {
+  background: #eee;
+}
+tr:nth-child(odd) {
+  background: #fff;
 }
