@@ -9,6 +9,20 @@ const InstructorStudentEditModal = (props) => {
   const [student, setStudent] = useState(null);
   useEffect(() => {
     ajax(`/api/users/${studentEmail}`, "get", user.jwt).then((data) => {
+      if (!data) {
+        let yesNo = window.confirm(
+          "User doesn't exist in the Assignment Submission app, do you want to create the user?"
+        );
+        if (yesNo) {
+          ajax(`/api/users/${studentEmail}`, "put", user.jwt, {
+            email: studentEmail,
+          }).then((data) => {
+            emitClose();
+          });
+        } else {
+          emitClose();
+        }
+      }
       data.email = data.username;
       setStudent(data);
     });

@@ -30,13 +30,6 @@ public class User implements UserDetails {
     }
 
     public User(ProffessoUser proffessoUser, Optional<User> appUserOpt) {
-//        proffessoUser.getAuthorities().stream()
-//        .forEach(auth -> {
-//            Authorities newAuth = new Authorities();
-//            newAuth.setAuthority(auth.getAuthority());
-//            newAuth.setUser(this);
-//            this.getAuthorities().add(newAuth);
-//        });
         appUserOpt.ifPresent(appUser -> {
             appUser.getAuthorities()
                     .stream()

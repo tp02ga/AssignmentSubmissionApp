@@ -49,6 +49,12 @@ public class UserService {
 
     }
 
+    public User duplicateProffessoUser(ProffessoUser proffessoUser) {
+        User user = new User(proffessoUser, Optional.empty());
+        user = userRepo.save(user);
+        return user;
+    }
+
     @Secured({"ROLE_INSTRUCTOR"})
     @Transactional
     public List<UserKeyDto> findBootcampStudents() {
@@ -82,7 +88,7 @@ public class UserService {
             userRepo.save(u);
         }, () -> {
             Optional<ProffessoUser> proffessoUserOpt = proffessoUserRepo.findByEmail(user.getEmail());
-            System.out.println("Proffesso user found: " + proffessoUserOpt);
+            proffessoUserOpt.ifPresent(proffessoUser -> duplicateProffessoUser(proffessoUser));
         });
     }
 }
