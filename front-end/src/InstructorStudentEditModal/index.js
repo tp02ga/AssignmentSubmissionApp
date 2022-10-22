@@ -48,7 +48,7 @@ const InstructorStudentEditModal = (props) => {
                   <Form.Control
                     type="text"
                     value={student.name}
-                    readOnly
+                    onChange={(e) => updateStudentData("name", e.target.value)}
                   ></Form.Control>
                 </Form.Group>
                 <Form.Group controlId="email">

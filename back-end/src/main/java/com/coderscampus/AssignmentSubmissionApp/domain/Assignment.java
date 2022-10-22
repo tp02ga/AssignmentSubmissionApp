@@ -20,6 +20,8 @@ public class Assignment {
     @ManyToOne
     private User codeReviewer;
     private LocalDateTime submittedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastModified;
 
     public Long getId() {
         return id;
@@ -87,6 +89,22 @@ public class Assignment {
 
     public LocalDateTime getSubmittedDate() {
         return submittedDate;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
     }
 
     @Override

@@ -6,6 +6,7 @@ import StatusBadge from "../StatusBadge";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../UserProvider";
 import NavBar from "../NavBar";
+import moment from "moment";
 
 const CodeReviewerDashboard = () => {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const CodeReviewerDashboard = () => {
   useEffect(() => {
     ajax("api/assignments", "GET", user.jwt).then((assignmentsData) => {
       setAssignments(assignmentsData);
+      console.log(assignmentsData);
     });
   }, [user.jwt]);
 
@@ -148,6 +150,14 @@ const CodeReviewerDashboard = () => {
                         </p>
                         <p>
                           <b>Student</b>: {assignment.user.name}
+                        </p>
+                        <p>
+                          <b>Submitted</b>:{" "}
+                          {assignment.submittedDate
+                            ? moment(assignment.submittedDate).format(
+                                "MMMM Do YYYY"
+                              )
+                            : "No submitted date"}
                         </p>
                       </Card.Text>
 

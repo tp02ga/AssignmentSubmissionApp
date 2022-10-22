@@ -33,6 +33,35 @@ function getDueDates(sd, courseDurationInWeeks, assignments) {
   }
 }
 
+const getNumDaysSinceLastSubmission = (assignments) => {
+  const latestAssignment = assignments
+    .sort((a1, a2) => {
+      if (a2.submittedDate && a1.submittedDate) {
+        return dayjs(a2.submittedDate).diff(dayjs(a1.submittedDate), "second");
+      } else if (a2.lastModified && a1.lastModified) {
+        return new Date(a2.lastModified) - new Date(a1.lastModified);
+      } else if (!a2.submittedDate && a1.submittedDate) {
+        return -1;
+      } else if (!a1.submittedDate && a2.submittedDate) {
+        return 1;
+      }
+      return 0;
+    })
+    .splice(0, 1);
+
+  if (latestAssignment.length > 0 && latestAssignment[0].submittedDate) {
+    const submittedDay = dayjs(latestAssignment[0].submittedDate);
+    console.log("We have a submitted date: ", submittedDay);
+    const dayDiff = dayjs().diff(submittedDay, "day");
+    console.log("Day diff: ", dayDiff);
+    return dayDiff;
+  } else if (latestAssignment.lastModified) {
+    return dayjs().diff(dayjs(latestAssignment.lastModified), "day");
+  } else {
+    return -1;
+  }
+};
+
 function numAssignmentsThatShouldBeCompleted(sd, courseDurationInWeeks) {
   const startDate = dayjs(sd);
   const now = dayjs();
@@ -78,4 +107,8 @@ function getColor(assignments, num, dueDate) {
     else return "grey";
   }
 }
-export { getDueDates, numAssignmentsThatShouldBeCompleted };
+export {
+  getDueDates,
+  numAssignmentsThatShouldBeCompleted,
+  getNumDaysSinceLastSubmission,
+};

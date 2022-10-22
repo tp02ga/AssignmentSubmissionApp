@@ -13,6 +13,7 @@
     "http-proxy-middleware": "^2.0.2",
     "js-cookie": "^3.0.1",
     "jwt-check-expiration": "^1.0.5",
+    "moment": "^2.29.4",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.2",

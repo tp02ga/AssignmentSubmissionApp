@@ -83,8 +83,9 @@ public class UserService {
     public void updateUser(UserKeyDto user) {
         Optional<User> userOpt = userRepo.findByUsername(user.getEmail());
         userOpt.ifPresentOrElse(u -> {
-            u.setCohortStartDate(user.getStartDate());
+            u.setCohortStartDate(user.getStartDate() != null ? user.getStartDate() : user.getCohortStartDate());
             u.setBootcampDurationInWeeks(user.getBootcampDurationInWeeks());
+            u.setName(user.getName());
             userRepo.save(u);
         }, () -> {
             Optional<ProffessoUser> proffessoUserOpt = proffessoUserRepo.findByEmail(user.getEmail());

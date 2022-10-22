@@ -12,6 +12,7 @@ public class UserKeyDto implements Comparable<UserKeyDto> {
     private String email;
     private String name;
     private LocalDate startDate;
+    private LocalDate cohortStartDate;
     private Integer bootcampDurationInWeeks;
 
     public UserKeyDto(String email,
@@ -54,6 +55,14 @@ public class UserKeyDto implements Comparable<UserKeyDto> {
 
     public void setBootcampDurationInWeeks(Integer bootcampDurationInWeeks) {
         this.bootcampDurationInWeeks = bootcampDurationInWeeks;
+    }
+
+    public LocalDate getCohortStartDate() {
+        return cohortStartDate;
+    }
+
+    public void setCohortStartDate(LocalDate cohortStartDate) {
+        this.cohortStartDate = cohortStartDate;
     }
 
     @Override

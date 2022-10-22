@@ -3,11 +3,15 @@ package com.coderscampus.AssignmentSubmissionApp.web;
 import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
 import com.coderscampus.AssignmentSubmissionApp.domain.User;
 import com.coderscampus.AssignmentSubmissionApp.dto.AssignmentResponseDto;
+import com.coderscampus.AssignmentSubmissionApp.dto.BootcampAssignmentResponseDto;
+import com.coderscampus.AssignmentSubmissionApp.dto.JavaFoundationsAssignmentResponseDto;
 import com.coderscampus.AssignmentSubmissionApp.dto.UserKeyDto;
 import com.coderscampus.AssignmentSubmissionApp.enums.AuthorityEnum;
 import com.coderscampus.AssignmentSubmissionApp.service.AssignmentService;
+import com.coderscampus.AssignmentSubmissionApp.service.OrderService;
 import com.coderscampus.AssignmentSubmissionApp.service.UserService;
 import com.coderscampus.AssignmentSubmissionApp.util.AuthorityUtil;
+import com.coderscampus.proffesso.domain.Offer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,6 +31,9 @@ public class AssignmentController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OrderService orderService;
+
     @PostMapping("")
     public ResponseEntity<?> createAssignment(@AuthenticationPrincipal User user) {
         Assignment newAssignment = assignmentService.save(user);
@@ -44,8 +51,21 @@ public class AssignmentController {
     public ResponseEntity<?> getAssignment(@PathVariable Long assignmentId, @AuthenticationPrincipal User user) {
         Optional<Assignment> assignmentOpt = assignmentService.findById(assignmentId);
 
-        AssignmentResponseDto response = new AssignmentResponseDto(assignmentOpt.orElse(new Assignment()));
-        return ResponseEntity.ok(response);
+        Set<Offer> offers = orderService.findStudentOrdersByUserId(user.getId());
+        boolean isBootcampStudent = offers.stream()
+                .anyMatch(offer -> offer.getId().equals(226L));
+        boolean isJavaFoundationsStudent = offers.stream()
+                .anyMatch(offer -> offer.getId().equals(225L));
+
+        if (isBootcampStudent) {
+
+            AssignmentResponseDto response = new BootcampAssignmentResponseDto(assignmentOpt.orElse(new Assignment()));
+            return ResponseEntity.ok(response);
+        } else if (isJavaFoundationsStudent) {
+            AssignmentResponseDto response = new JavaFoundationsAssignmentResponseDto(assignmentOpt.orElse(new Assignment()));
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.ok(new BootcampAssignmentResponseDto());
     }
 
     @PutMapping("{assignmentId}")

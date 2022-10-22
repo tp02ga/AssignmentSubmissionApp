@@ -26,6 +26,7 @@ public class AssignmentService {
         Assignment assignment = new Assignment();
         assignment.setStatus(AssignmentStatusEnum.PENDING_SUBMISSION.getStatus());
         assignment.setNumber(findNextAssignmentToSubmit(user));
+        assignment.setCreatedDate(LocalDateTime.now());
         assignment.setUser(user);
 
         return assignmentRepo.save(assignment);
@@ -87,6 +88,7 @@ public class AssignmentService {
         Assignment oldAssignment = assignmentRepo.findById(assignment.getId()).get();
         String oldStatus = oldAssignment.getStatus();
 
+        assignment.setLastModified(LocalDateTime.now());
         Assignment newAssignment = assignmentRepo.save(assignment);
         String newStatus = newAssignment.getStatus();
 
