@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
+    public static final Long BOOTCAMP_OFFER_ID = 225L;
+    public static final Long JAVA_FOUNDATIONS_OFFER_ID = 226L;
 
     private OrderRepository orderRepo;
     private ProffessoUserRepo proffessoUserRepo;
@@ -28,16 +30,12 @@ public class OrderService {
 
         if (proffessoUserOpt.isPresent()) {
             Set<Order> orders = orderRepo.findByUser(proffessoUserOpt.get());
-            System.out.println("Orders: ");
-            System.out.println(orders);
 
             Set<Offer> offers = orders.stream()
                     .map(order -> order.getOffers())
                     .flatMap(Collection::stream)
                     .collect(Collectors.toSet());
 
-            System.out.println("Offers: ");
-            System.out.println(offers);
             return offers;
         }
         return null;

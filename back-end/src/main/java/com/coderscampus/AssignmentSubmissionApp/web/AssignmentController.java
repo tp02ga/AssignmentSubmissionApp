@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.BOOTCAMP_OFFER_ID;
+import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.JAVA_FOUNDATIONS_OFFER_ID;
+
 @RestController
 @RequestMapping("/api/assignments")
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "https://assignments.coderscampus.com"}, allowCredentials = "true")
@@ -53,9 +56,9 @@ public class AssignmentController {
 
         Set<Offer> offers = orderService.findStudentOrdersByUserId(user.getId());
         boolean isBootcampStudent = offers.stream()
-                .anyMatch(offer -> offer.getId().equals(226L));
+                .anyMatch(offer -> offer.getId().equals(BOOTCAMP_OFFER_ID));
         boolean isJavaFoundationsStudent = offers.stream()
-                .anyMatch(offer -> offer.getId().equals(225L));
+                .anyMatch(offer -> offer.getId().equals(JAVA_FOUNDATIONS_OFFER_ID));
 
         if (isBootcampStudent) {
 

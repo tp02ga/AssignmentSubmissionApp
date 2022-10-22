@@ -11,6 +11,7 @@ public class Assignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer number;
+    private String name;
     private String status;
     private String githubUrl;
     private String branch;
@@ -105,6 +106,14 @@ public class Assignment {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

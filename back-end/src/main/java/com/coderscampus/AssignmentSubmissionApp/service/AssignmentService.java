@@ -3,9 +3,9 @@ package com.coderscampus.AssignmentSubmissionApp.service;
 import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
 import com.coderscampus.AssignmentSubmissionApp.domain.User;
 import com.coderscampus.AssignmentSubmissionApp.dto.UserKeyDto;
-import com.coderscampus.AssignmentSubmissionApp.enums.AssignmentStatusEnum;
-import com.coderscampus.AssignmentSubmissionApp.enums.AuthorityEnum;
+import com.coderscampus.AssignmentSubmissionApp.enums.*;
 import com.coderscampus.AssignmentSubmissionApp.repository.AssignmentRepository;
+import com.coderscampus.proffesso.domain.Offer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.BOOTCAMP_OFFER_ID;
+import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.JAVA_FOUNDATIONS_OFFER_ID;
+
 @Service
 public class AssignmentService {
 
@@ -21,14 +24,30 @@ public class AssignmentService {
     private AssignmentRepository assignmentRepo;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private OrderService orderService;
 
     public Assignment save(User user) {
         Assignment assignment = new Assignment();
         assignment.setStatus(AssignmentStatusEnum.PENDING_SUBMISSION.getStatus());
-        assignment.setNumber(findNextAssignmentToSubmit(user));
+        Integer nextAssignmentToSubmit = findNextAssignmentToSubmit(user);
+        assignment.setNumber(nextAssignmentToSubmit);
         assignment.setCreatedDate(LocalDateTime.now());
         assignment.setUser(user);
 
+        Set<Offer> offers = orderService.findStudentOrdersByUserId(user.getId());
+        boolean isBootcampStudent = offers.stream()
+                .anyMatch(offer -> offer.getId().equals(BOOTCAMP_OFFER_ID));
+        boolean isJavaFoundationsStudent = offers.stream()
+                .anyMatch(offer -> offer.getId().equals(JAVA_FOUNDATIONS_OFFER_ID));
+
+        if (isBootcampStudent) {
+            AssignmentEnum bootcampAssignmentEnum = BootcampAssignmentEnum.values()[nextAssignmentToSubmit - 1];
+            assignment.setName(bootcampAssignmentEnum.getAssignmentName());
+        } else if (isJavaFoundationsStudent) {
+            AssignmentEnum bootcampAssignmentEnum = JavaFoundationsAssignmentEnum.values()[nextAssignmentToSubmit - 1];
+            assignment.setName(bootcampAssignmentEnum.getAssignmentName());
+        }
         return assignmentRepo.save(assignment);
     }
 

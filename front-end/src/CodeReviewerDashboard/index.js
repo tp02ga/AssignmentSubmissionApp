@@ -72,10 +72,16 @@ const CodeReviewerDashboard = () => {
                   <Card key={assignment.id} style={{ width: "18rem" }}>
                     <Card.Body className="d-flex flex-column justify-content-around">
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
+                      {assignment.name ? (
+                        <Card.Subtitle style={{ marginBottom: "0.5em" }}>
+                          {assignment.name}
+                        </Card.Subtitle>
+                      ) : (
+                        <></>
+                      )}
                       <div className="d-flex align-items-start">
                         <StatusBadge text={assignment.status} />
                       </div>
-
                       <Card.Text style={{ marginTop: "1em" }}>
                         <p>
                           <b>GitHub URL</b>: {assignment.githubUrl}
@@ -87,7 +93,6 @@ const CodeReviewerDashboard = () => {
                           <b>Student</b>: {assignment.user.name}
                         </p>
                       </Card.Text>
-
                       <Button
                         variant="secondary"
                         onClick={() => {
@@ -137,6 +142,14 @@ const CodeReviewerDashboard = () => {
                   <Card key={assignment.id} style={{ width: "18rem" }}>
                     <Card.Body className="d-flex flex-column justify-content-around">
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
+
+                      {assignment.name ? (
+                        <Card.Subtitle style={{ marginBottom: "0.5em" }}>
+                          {assignment.name}
+                        </Card.Subtitle>
+                      ) : (
+                        <></>
+                      )}
                       <div className="d-flex align-items-start">
                         <StatusBadge text={assignment.status} />
                       </div>
@@ -194,6 +207,13 @@ const CodeReviewerDashboard = () => {
                   <Card key={assignment.id} style={{ width: "18rem" }}>
                     <Card.Body className="d-flex flex-column justify-content-around">
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
+                      {assignment.name ? (
+                        <Card.Subtitle style={{ marginBottom: "0.5em" }}>
+                          {assignment.name}
+                        </Card.Subtitle>
+                      ) : (
+                        <></>
+                      )}
                       <div className="d-flex align-items-start">
                         <StatusBadge text={assignment.status} />
                       </div>
