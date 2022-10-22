@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService {
     public static final Long BOOTCAMP_OFFER_ID = 225L;
-    public static final Long JAVA_FOUNDATIONS_OFFER_ID = 226L;
+    public static final Long JAVA_FOUNDATIONS_OFFER_ID = 227L;
 
     private OrderRepository orderRepo;
     private ProffessoUserRepo proffessoUserRepo;

@@ -73,7 +73,10 @@ const CodeReviewerDashboard = () => {
                     <Card.Body className="d-flex flex-column justify-content-around">
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
                       {assignment.name ? (
-                        <Card.Subtitle style={{ marginBottom: "0.5em" }}>
+                        <Card.Subtitle
+                          style={{ marginBottom: "0.5em" }}
+                          className="text-muted"
+                        >
                           {assignment.name}
                         </Card.Subtitle>
                       ) : (
@@ -144,7 +147,10 @@ const CodeReviewerDashboard = () => {
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
 
                       {assignment.name ? (
-                        <Card.Subtitle style={{ marginBottom: "0.5em" }}>
+                        <Card.Subtitle
+                          style={{ marginBottom: "0.5em" }}
+                          className="text-muted"
+                        >
                           {assignment.name}
                         </Card.Subtitle>
                       ) : (
@@ -208,7 +214,10 @@ const CodeReviewerDashboard = () => {
                     <Card.Body className="d-flex flex-column justify-content-around">
                       <Card.Title>Assignment #{assignment.number}</Card.Title>
                       {assignment.name ? (
-                        <Card.Subtitle style={{ marginBottom: "0.5em" }}>
+                        <Card.Subtitle
+                          style={{ marginBottom: "0.5em" }}
+                          className="text-muted"
+                        >
                           {assignment.name}
                         </Card.Subtitle>
                       ) : (
