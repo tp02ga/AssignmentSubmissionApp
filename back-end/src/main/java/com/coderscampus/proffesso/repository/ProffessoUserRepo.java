@@ -14,7 +14,13 @@ public interface ProffessoUserRepo extends JpaRepository<ProffessoUser, Long> {
             + "where u.email = :username ")
     Optional<ProffessoUser> findByEmail(String username);
 
-    //    @Procedure("find_bootcamp_students")
     @Query(value = "CALL find_bootcamp_students();", nativeQuery = true)
     List<Tuple> findBootcampStudents();
+
+    @Query("select u from ProffessoUser u " +
+            "join u.orders o " +
+            "join o.offers off " +
+            "where off.id = 225 " +
+            "and (o.suspendOn is not null and o.suspendOn < now())")
+    List<ProffessoUser> findDroppedBootcampStudents();
 }

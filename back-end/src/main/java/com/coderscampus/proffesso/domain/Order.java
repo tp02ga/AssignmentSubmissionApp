@@ -2,10 +2,6 @@ package com.coderscampus.proffesso.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -27,14 +23,6 @@ public class Order implements Serializable {
     private Boolean delinquent = false;
     private Date suspendOn;
     private String purchaseUrl;
-    @CreatedDate
-    private Date createdDate;
-    @CreatedBy
-    private String createdBy;
-    @LastModifiedDate
-    private Date lastModifiedDate;
-    @LastModifiedBy
-    private String lastModifiedBy;
     private Date cancellationRequestedOn;
     private Date refundRequestedOn;
 
@@ -89,38 +77,6 @@ public class Order implements Serializable {
 
     public void setSuspendOn(Date suspendOn) {
         this.suspendOn = suspendOn;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
     }
 
     public String getPurchaseUrl() {

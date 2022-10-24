@@ -6,6 +6,7 @@ import com.coderscampus.AssignmentSubmissionApp.dto.UserKeyDto;
 import com.coderscampus.AssignmentSubmissionApp.enums.*;
 import com.coderscampus.AssignmentSubmissionApp.repository.AssignmentRepository;
 import com.coderscampus.proffesso.domain.Offer;
+import com.coderscampus.proffesso.repository.ProffessoUserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,8 @@ public class AssignmentService {
     private NotificationService notificationService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private ProffessoUserRepo proffessoUserRepo;
 
     public Assignment save(User user) {
         Assignment assignment = new Assignment();
@@ -73,8 +76,13 @@ public class AssignmentService {
     @Secured({"ROLE_INSTRUCTOR"})
     public Map<UserKeyDto, Set<Assignment>> findAll() {
         List<Assignment> assignments = assignmentRepo.findAllActiveBootcampStudents();
+        var droppedStudents = proffessoUserRepo.findDroppedBootcampStudents();
 
         Map<UserKeyDto, Set<Assignment>> allStudentAssignments = assignments.stream()
+                .filter(assignment -> !droppedStudents.stream()
+                        .filter(droppedStudent -> droppedStudent.getId().equals(assignment.getUser().getId()))
+                        .findAny()
+                        .isPresent())
                 .collect(Collectors.groupingBy(a -> new UserKeyDto(a.getUser().getUsername(),
                                 a.getUser().getName(),
                                 a.getUser().getCohortStartDate(),

@@ -59,6 +59,8 @@ public class UserService {
     @Transactional
     public List<UserKeyDto> findBootcampStudents() {
         List<Tuple> proffessoUsersRawData = proffessoUserRepo.findBootcampStudents();
+        var droppedStudents = proffessoUserRepo.findDroppedBootcampStudents();
+
         List<User> users = userRepo.findAll();
         List<UserKeyDto> proffessoUsers = proffessoUsersRawData.stream()
                 .map(data -> {
@@ -72,7 +74,12 @@ public class UserService {
                 })
                 .collect(Collectors.toList());
 
-        return proffessoUsers;
+        return proffessoUsers.stream()
+                .filter(proffessoUser -> !droppedStudents.stream()
+                        .filter(droppedStudent -> droppedStudent.getEmail().equalsIgnoreCase(proffessoUser.getEmail()))
+                        .findAny()
+                        .isPresent())
+                .collect(Collectors.toList());
     }
 
     @Secured({"ROLE_INSTRUCTOR"})
