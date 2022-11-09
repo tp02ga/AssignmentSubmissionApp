@@ -8,13 +8,14 @@ import com.coderscampus.proffesso.repository.ProffessoUserRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
-    public static final Long BOOTCAMP_OFFER_ID = 225L;
+    public static final List<Long> BOOTCAMP_OFFER_IDS = List.of(225L, 221L, 218L, 212L);
     public static final Long JAVA_FOUNDATIONS_OFFER_ID = 227L;
 
     private OrderRepository orderRepo;

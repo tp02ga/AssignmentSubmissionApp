@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.BOOTCAMP_OFFER_ID;
+import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.BOOTCAMP_OFFER_IDS;
 import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.JAVA_FOUNDATIONS_OFFER_ID;
 
 @RestController
@@ -54,9 +54,9 @@ public class AssignmentController {
     public ResponseEntity<?> getAssignment(@PathVariable Long assignmentId, @AuthenticationPrincipal User user) {
         Optional<Assignment> assignmentOpt = assignmentService.findById(assignmentId);
 
-        Set<Offer> offers = orderService.findStudentOrdersByUserId(user.getId());
+        Set<Offer> offers = orderService.findStudentOrdersByUserId(assignmentOpt.get().getUser().getId());
         boolean isBootcampStudent = offers.stream()
-                .anyMatch(offer -> offer.getId().equals(BOOTCAMP_OFFER_ID));
+                .anyMatch(offer -> BOOTCAMP_OFFER_IDS.contains(offer.getId()));
         boolean isJavaFoundationsStudent = offers.stream()
                 .anyMatch(offer -> offer.getId().equals(JAVA_FOUNDATIONS_OFFER_ID));
 

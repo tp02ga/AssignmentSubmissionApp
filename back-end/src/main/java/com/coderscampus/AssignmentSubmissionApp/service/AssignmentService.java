@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.BOOTCAMP_OFFER_ID;
+import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.BOOTCAMP_OFFER_IDS;
 import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.JAVA_FOUNDATIONS_OFFER_ID;
 
 @Service
@@ -40,7 +40,7 @@ public class AssignmentService {
 
         Set<Offer> offers = orderService.findStudentOrdersByUserId(user.getId());
         boolean isBootcampStudent = offers.stream()
-                .anyMatch(offer -> offer.getId().equals(BOOTCAMP_OFFER_ID));
+                .anyMatch(offer -> BOOTCAMP_OFFER_IDS.contains(offer.getId()));
         boolean isJavaFoundationsStudent = offers.stream()
                 .anyMatch(offer -> offer.getId().equals(JAVA_FOUNDATIONS_OFFER_ID));
 
