@@ -45,3 +45,4 @@ back-end/logs/spring-boot-logger.log
 _docker-compose.yml
 _docker-compose.yml
 *.log
+ecs-push-assignment-app.sh

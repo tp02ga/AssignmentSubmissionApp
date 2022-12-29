@@ -121,19 +121,22 @@ public class AssignmentService {
 
         if (!oldStatus.equals(newStatus)) {
             if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))) {
-                newAssignment.setSubmittedDate(LocalDateTime.now());
+                newAssignment.setLastModified(LocalDateTime.now());
                 newAssignment = assignmentRepo.save(newAssignment);
             }
             if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))
                     || (oldStatus.contentEquals("Needs Update") && newStatus.contentEquals("Resubmitted"))) {
                 notificationService.sendAssignmentStatusUpdateCodeReviewer(oldStatus, assignment);
+                if (AssignmentStatusEnum.RESUBMITTED.getStatus().equalsIgnoreCase(newStatus)) {
+                    newAssignment.setCodeReviewer(null);
+                    newAssignment = assignmentRepo.save(newAssignment);
+                }
             }
 
             if ((oldStatus.contentEquals("In Review") && newStatus.contentEquals("Completed"))
                     || (oldStatus.equals("In Review") && newStatus.equals("Needs Update"))) {
                 notificationService.sendAssignmentStatusUpdateStudent(oldStatus, assignment);
             }
-
         }
 
         return newAssignment;

@@ -5,7 +5,9 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -29,6 +32,8 @@ public class NotificationService {
     @Value("#{'${emails.codeReviewers}'.split(',')}")
     private List<String> codeReviewers;
 
+    @Autowired
+    private Environment environment;
     @Value("${domainRoot}")
     private String domainRoot;
 
@@ -46,15 +51,24 @@ public class NotificationService {
         data.add("from", "Trevor Page <trevor@coderscampus.com>");
         data.add("subject", subject);
         data.add("to", toEmail);
+        data.add("cc", "trevor@coderscampus.com");
         data.add("html", message);
         data.add("text", textMessage);
 
         HttpEntity<MultiValueMap> entity = new HttpEntity<>(data, createHeaders(username, password));
 
-        ResponseEntity<String> response = rt.exchange("https://api.mailgun.net/v3/coderscampus.com/messages", HttpMethod.POST,
-                entity, String.class);
-        log.info("Email sent to {}", toEmail);
-        return response;
+        var activeProfiles = this.environment != null ? this.environment.getActiveProfiles() : new String[]{"local"};
+        if (activeProfiles != null && Arrays.stream(activeProfiles).anyMatch(profile -> "local".equalsIgnoreCase(profile))) {
+            log.warn("Local profile detected, suppressing the sending of email.");
+            return ResponseEntity.ok().build();
+        } else {
+            ResponseEntity<String> response = rt.exchange("https://api.mailgun.net/v3/coderscampus.com/messages", HttpMethod.POST,
+                    entity, String.class);
+            log.info("Email sent to {}", toEmail);
+            return response;
+        }
+
+
     }
 
     HttpHeaders createHeaders(String username, String password) {
@@ -87,11 +101,8 @@ public class NotificationService {
 
     public void sendAssignmentStatusUpdateCodeReviewer(String oldStatus, Assignment assignment) {
         List<String> recipients = new ArrayList<>();
-        if (assignment.getStatus().contentEquals("Resubmitted")) {
-            recipients.add(assignment.getCodeReviewer().getUsername());
-        } else {
-            recipients.addAll(codeReviewers);
-        }
+        recipients.addAll(codeReviewers);
+
         StringBuffer emailBody = new StringBuffer();
         if (recipients.size() > 1) {
             emailBody.append("This is a broadcast message to all Coders Campus Code Reviewers.\n\n");

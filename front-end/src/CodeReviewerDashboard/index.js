@@ -20,6 +20,24 @@ const CodeReviewerDashboard = () => {
     navigate(`/assignments/${assignment.id}`);
     // window.location.href = `/assignments/${assignment.id}`;
   }
+  function unclaimAssignment(assignment) {
+    const decodedJwt = jwt_decode(user.jwt);
+    const codeReviewer = {
+      username: decodedJwt.sub,
+    };
+
+    assignment.codeReviewer = null;
+    // TODO: don't hardcode this status
+    assignment.status = "Submitted";
+    ajax(`/api/assignments/${assignment.id}`, "PUT", user.jwt, assignment).then(
+      (updatedAssignment) => {
+        const assignmentsCopy = [...assignments];
+        const i = assignmentsCopy.findIndex((a) => a.id === assignment.id);
+        assignmentsCopy[i] = updatedAssignment;
+        setAssignments(assignmentsCopy);
+      }
+    );
+  }
 
   function claimAssignment(assignment) {
     const decodedJwt = jwt_decode(user.jwt);
@@ -96,14 +114,25 @@ const CodeReviewerDashboard = () => {
                           <b>Student</b>: {assignment.user.name}
                         </p>
                       </Card.Text>
-                      <Button
-                        variant="secondary"
-                        onClick={() => {
-                          editReview(assignment);
-                        }}
-                      >
-                        Edit
-                      </Button>
+                      <div className="d-flex flex-column justify-content-around">
+                        <Button
+                          variant="primary"
+                          onClick={() => {
+                            editReview(assignment);
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="secondary"
+                          className="mt-3"
+                          onClick={() => {
+                            unclaimAssignment(assignment);
+                          }}
+                        >
+                          Un-claim
+                        </Button>
+                      </div>
                     </Card.Body>
                   </Card>
                 ))}
