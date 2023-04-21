@@ -1,0 +1,24 @@
+#root{  
+    height: calc(100vh - 100px);
+}
+.wrapper{
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, #8ad2d4 , #243f93 );
+    height: 100%;
+}
+.top-half{
+    padding-top: 3rem;
+    
+}
+.welcome {
+    color: #243f93;
+}
+.bottom-half{
+    display: flex;
+    margin-bottom: 20rem;
+}
+.welcome-text{
+    color: white;
+}
