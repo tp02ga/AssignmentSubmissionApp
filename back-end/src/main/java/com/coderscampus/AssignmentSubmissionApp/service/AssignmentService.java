@@ -122,6 +122,8 @@ public class AssignmentService {
         if (!oldStatus.equals(newStatus)) {
             if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))) {
                 newAssignment.setLastModified(LocalDateTime.now());
+                if (newAssignment.getSubmittedDate() == null)
+                    newAssignment.setSubmittedDate(LocalDateTime.now());
                 newAssignment = assignmentRepo.save(newAssignment);
             }
             if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))
