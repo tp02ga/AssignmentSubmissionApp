@@ -83,6 +83,7 @@ public class AssignmentService {
                         .filter(droppedStudent -> droppedStudent.getId().equals(assignment.getUser().getId()))
                         .findAny()
                         .isPresent())
+                .filter(a -> (a.getName() == null) || !a.getName().equals("Compounding Interest Calculator") && !a.getName().equals("Job Data Parsing & Filtering"))
                 .collect(Collectors.groupingBy(a -> new UserKeyDto(a.getUser().getUsername(),
                                 a.getUser().getName(),
                                 a.getUser().getCohortStartDate(),
