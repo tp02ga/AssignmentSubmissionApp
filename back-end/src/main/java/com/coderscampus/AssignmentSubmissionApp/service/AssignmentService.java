@@ -1,26 +1,38 @@
 package com.coderscampus.AssignmentSubmissionApp.service;
 
-import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
-import com.coderscampus.AssignmentSubmissionApp.domain.User;
-import com.coderscampus.AssignmentSubmissionApp.dto.UserKeyDto;
-import com.coderscampus.AssignmentSubmissionApp.enums.*;
-import com.coderscampus.AssignmentSubmissionApp.repository.AssignmentRepository;
-import com.coderscampus.proffesso.domain.Offer;
-import com.coderscampus.proffesso.repository.ProffessoUserRepo;
+import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.BOOTCAMP_OFFER_IDS;
+import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.JAVA_FOUNDATIONS_OFFER_ID;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.BOOTCAMP_OFFER_IDS;
-import static com.coderscampus.AssignmentSubmissionApp.service.OrderService.JAVA_FOUNDATIONS_OFFER_ID;
+import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
+import com.coderscampus.AssignmentSubmissionApp.domain.User;
+import com.coderscampus.AssignmentSubmissionApp.dto.UserKeyDto;
+import com.coderscampus.AssignmentSubmissionApp.enums.AssignmentEnum;
+import com.coderscampus.AssignmentSubmissionApp.enums.AssignmentStatusEnum;
+import com.coderscampus.AssignmentSubmissionApp.enums.AuthorityEnum;
+import com.coderscampus.AssignmentSubmissionApp.enums.BootcampAssignmentEnum;
+import com.coderscampus.AssignmentSubmissionApp.enums.JavaFoundationsAssignmentEnum;
+import com.coderscampus.AssignmentSubmissionApp.repository.AssignmentRepository;
+import com.coderscampus.proffesso.domain.Offer;
+import com.coderscampus.proffesso.repository.ProffessoUserRepo;
 
 @Service
 public class AssignmentService {
 
+    Logger log = LoggerFactory.getLogger(AssignmentService.class);
     @Autowired
     private AssignmentRepository assignmentRepo;
     @Autowired
@@ -84,6 +96,7 @@ public class AssignmentService {
                         .findAny()
                         .isPresent())
                 .filter(a -> (a.getName() == null) || !a.getName().equals("Compounding Interest Calculator") && !a.getName().equals("Job Data Parsing & Filtering"))
+                .filter(a -> (a.getStatus() != null && !a.getStatus().equals(AssignmentStatusEnum.PENDING_SUBMISSION.getStatus())))
                 .collect(Collectors.groupingBy(a -> new UserKeyDto(a.getUser().getUsername(),
                                 a.getUser().getName(),
                                 a.getUser().getCohortStartDate(),
@@ -130,6 +143,15 @@ public class AssignmentService {
             if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))
                     || (oldStatus.contentEquals("Needs Update") && newStatus.contentEquals("Resubmitted"))) {
                 notificationService.sendAssignmentStatusUpdateCodeReviewer(oldStatus, assignment);
+                
+                try {
+                    notificationService.sendSlackMessage(assignment, "BOOTCAMP_STUDENTS");
+                }
+                catch (Exception e) {
+                    // log and ignore failure
+                    log.error("Failed to send slack message",e);
+                }
+                
                 if (AssignmentStatusEnum.RESUBMITTED.getStatus().equalsIgnoreCase(newStatus)) {
                     newAssignment.setCodeReviewer(null);
                     newAssignment = assignmentRepo.save(newAssignment);

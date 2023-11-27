@@ -1,6 +1,11 @@
 package com.coderscampus.AssignmentSubmissionApp.service;
 
-import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -11,6 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -18,13 +24,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.coderscampus.AssignmentSubmissionApp.domain.Assignment;
+import com.coderscampus.AssignmentSubmissionApp.dto.GhlSlackMessageCustomData;
+import com.coderscampus.AssignmentSubmissionApp.dto.GhlWebhookRequest;
 
 @Service
 public class NotificationService {
+    private static final String BROADCAST_MESSAGE = "This is a broadcast message to all Coders Campus Code Reviewers.";
     @Value("${mail.username}")
     private String username;
     @Value("${mail.password}")
@@ -51,11 +57,13 @@ public class NotificationService {
         data.add("from", "Trevor Page <trevor@coderscampus.com>");
         data.add("subject", subject);
         data.add("to", toEmail);
-        data.add("cc", "trevor@coderscampus.com");
+        if (!message.contains(BROADCAST_MESSAGE)) {
+            data.add("cc", "trevor@coderscampus.com");
+        }
         data.add("html", message);
         data.add("text", textMessage);
 
-        HttpEntity<MultiValueMap> entity = new HttpEntity<>(data, createHeaders(username, password));
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(data, createHeaders(username, password));
 
         var activeProfiles = this.environment != null ? this.environment.getActiveProfiles() : new String[]{"local"};
         if (activeProfiles != null && Arrays.stream(activeProfiles).anyMatch(profile -> "local".equalsIgnoreCase(profile))) {
@@ -105,7 +113,11 @@ public class NotificationService {
 
         StringBuffer emailBody = new StringBuffer();
         if (recipients.size() > 1) {
-            emailBody.append("This is a broadcast message to all Coders Campus Code Reviewers.\n\n");
+            emailBody.append(BROADCAST_MESSAGE);
+            // Don't send group emails to Trevor
+            recipients = recipients.stream()
+                                   .filter(recipient -> !recipient.equalsIgnoreCase("trevor@coderscampus.com"))
+                                   .collect(Collectors.toList());
         }
         emailBody.append("Hello, " + assignment.getUser().getName() + "'s assignment "
                 + assignment.getNumber() + " has gone from [" + oldStatus + "] to [" + assignment.getStatus() + "].");
@@ -119,6 +131,25 @@ public class NotificationService {
             }
         });
 
+    }
+    
+    public void sendSlackMessage (Assignment assignment, String channelId) {
+        RestTemplate rt = new RestTemplate();
+        
+        GhlWebhookRequest request = new GhlWebhookRequest();
+        
+        GhlSlackMessageCustomData customData = new GhlSlackMessageCustomData();
+        customData.setChannel(channelId);
+        customData.setMessage("Congrats to " + assignment.getUser().getName() + " for submitting assignment #" + assignment.getNumber() + ". " + HypeUpService.getHypeUpMessage());
+        request.setCustomData(customData);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        
+        HttpEntity<GhlWebhookRequest> entity = new HttpEntity<>(request, headers);
+        
+        rt.exchange("https://courses.coderscampus.com/ghl/slack-message", HttpMethod.POST, entity, String.class);
+        
     }
 
 }
