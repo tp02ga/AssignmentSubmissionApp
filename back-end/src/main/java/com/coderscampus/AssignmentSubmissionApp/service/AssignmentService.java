@@ -139,11 +139,7 @@ public class AssignmentService {
                 if (newAssignment.getSubmittedDate() == null)
                     newAssignment.setSubmittedDate(LocalDateTime.now());
                 newAssignment = assignmentRepo.save(newAssignment);
-            }
-            if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))
-                    || (oldStatus.contentEquals("Needs Update") && newStatus.contentEquals("Resubmitted"))) {
-                notificationService.sendAssignmentStatusUpdateCodeReviewer(oldStatus, assignment);
-                
+                //send slack message
                 try {
                     notificationService.sendSlackMessage(assignment, "BOOTCAMP_STUDENTS");
                 }
@@ -151,6 +147,10 @@ public class AssignmentService {
                     // log and ignore failure
                     log.error("Failed to send slack message",e);
                 }
+            }
+            if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))
+                    || (oldStatus.contentEquals("Needs Update") && newStatus.contentEquals("Resubmitted"))) {
+                notificationService.sendAssignmentStatusUpdateCodeReviewer(oldStatus, assignment);
                 
                 if (AssignmentStatusEnum.RESUBMITTED.getStatus().equalsIgnoreCase(newStatus)) {
                     newAssignment.setCodeReviewer(null);
