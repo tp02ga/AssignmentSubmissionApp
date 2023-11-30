@@ -1,0 +1,36 @@
+.main-container{  
+    height: 100vh;
+    display: flex; 
+    flex-direction: column;
+}
+.wrapper{
+    display:flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background: linear-gradient(to bottom, #8ad2d4 50% , #243f93 50%);
+}
+.top-half{
+    padding-top: 3rem;
+    display:inline-block;
+    height:50%;
+}
+.welcome {
+    color: #243f93;
+}
+.bottom-half{
+    display:inline-block;
+    height: 50%;
+    margin-top: 3rem;
+}
+.bottom-container{
+    display: flex;
+    justify-content: space-between;
+}
+.welcome-text{
+    color: white;
+    max-width: 500px;
+}
+.assignment{
+    max-width: 20em;
+    margin-right: 20rem;
+}
