@@ -128,42 +128,41 @@ public class AssignmentService {
         // status
         Assignment oldAssignment = assignmentRepo.findById(assignment.getId()).get();
         String oldStatus = oldAssignment.getStatus();
-
         assignment.setLastModified(LocalDateTime.now());
         Assignment newAssignment = assignmentRepo.save(assignment);
         String newStatus = newAssignment.getStatus();
-
         if (!oldStatus.equals(newStatus)) {
+
             if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))) {
                 newAssignment.setLastModified(LocalDateTime.now());
                 if (newAssignment.getSubmittedDate() == null)
                     newAssignment.setSubmittedDate(LocalDateTime.now());
                 newAssignment = assignmentRepo.save(newAssignment);
-                //send slack message
-                try {
-                    notificationService.sendSlackMessage(assignment, "BOOTCAMP_STUDENTS");
-                }
-                catch (Exception e) {
-                    // log and ignore failure
-                    log.error("Failed to send slack message",e);
-                }
             }
+
             if ((oldStatus.contentEquals("Pending Submission") && newStatus.contentEquals("Submitted"))
                     || (oldStatus.contentEquals("Needs Update") && newStatus.contentEquals("Resubmitted"))) {
                 notificationService.sendAssignmentStatusUpdateCodeReviewer(oldStatus, assignment);
-                
+                if (AssignmentStatusEnum.SUBMITTED.getStatus().equalsIgnoreCase(newStatus)) {
+                    try {
+                        notificationService.sendSlackMessage(assignment, "BOOTCAMP_STUDENTS");
+                    }
+                    catch (Exception e) {
+                        // log and ignore failure
+                        log.error("Failed to send slack message",e);
+                    }
+                }
+
                 if (AssignmentStatusEnum.RESUBMITTED.getStatus().equalsIgnoreCase(newStatus)) {
                     newAssignment.setCodeReviewer(null);
                     newAssignment = assignmentRepo.save(newAssignment);
                 }
             }
-
             if ((oldStatus.contentEquals("In Review") && newStatus.contentEquals("Completed"))
                     || (oldStatus.equals("In Review") && newStatus.equals("Needs Update"))) {
                 notificationService.sendAssignmentStatusUpdateStudent(oldStatus, assignment);
             }
         }
-
         return newAssignment;
     }
 }
