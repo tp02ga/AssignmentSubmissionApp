@@ -145,7 +145,7 @@ public class AssignmentService {
                 notificationService.sendAssignmentStatusUpdateCodeReviewer(oldStatus, assignment);
                 if (AssignmentStatusEnum.SUBMITTED.getStatus().equalsIgnoreCase(newStatus)) {
                     try {
-                        notificationService.sendSlackMessage(assignment, "BOOTCAMP_STUDENTS");
+                        notificationService.sendCongratsOnAssignmentSubmissionSlackMessage(assignment, "BOOTCAMP_STUDENTS");
                     }
                     catch (Exception e) {
                         // log and ignore failure

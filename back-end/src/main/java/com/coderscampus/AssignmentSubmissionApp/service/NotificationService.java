@@ -108,48 +108,33 @@ public class NotificationService {
     }
 
     public void sendAssignmentStatusUpdateCodeReviewer(String oldStatus, Assignment assignment) {
-        List<String> recipients = new ArrayList<>();
-        recipients.addAll(codeReviewers);
+        String message = "Hello, " + assignment.getUser().getName() + "'s assignment "
+                + assignment.getNumber() + " has gone from [" + oldStatus + "] to [" + assignment.getStatus() + "]." +
+                "\n\n<" + domainRoot + "/dashboard|Click Here to Visit Assignment Submission Dashboard>";
 
-        StringBuffer emailBody = new StringBuffer();
-        if (recipients.size() > 1) {
-            emailBody.append(BROADCAST_MESSAGE);
-            // Don't send group emails to Trevor
-            recipients = recipients.stream()
-                                   .filter(recipient -> !recipient.equalsIgnoreCase("trevor@coderscampus.com"))
-                                   .collect(Collectors.toList());
-        }
-        emailBody.append("Hello, " + assignment.getUser().getName() + "'s assignment "
-                + assignment.getNumber() + " has gone from [" + oldStatus + "] to [" + assignment.getStatus() + "].");
-        String htmlEmailBody = emailBody + "\n\n<a href='" + domainRoot + "/dashboard'>Click Here to Visit Assignment Submission Dashboard</a>";
-
-        recipients.forEach(recipient -> {
-            try {
-                sendEmail(recipient, htmlEmailBody, emailBody.toString(), "[For Code Reviewers] Assignment Status Update");
-            } catch (JSONException e) {
-                log.error("Couldn't send email notification to code reviewers", e);
-            }
-        });
-
+        sendSlackMessage(message, "CODE_REVIEWERS");
     }
     
-    public void sendSlackMessage (Assignment assignment, String channelId) {
+    public void sendCongratsOnAssignmentSubmissionSlackMessage(Assignment assignment, String channelId) {
+        sendSlackMessage("Congrats to " + assignment.getUser().getName() + " for submitting assignment #" + assignment.getNumber() + ". " + HypeUpService.getHypeUpMessage(), channelId);
+    }
+
+    public void sendSlackMessage(String message, String channelId) {
         RestTemplate rt = new RestTemplate();
-        
+
         GhlWebhookRequest request = new GhlWebhookRequest();
-        
+
         GhlSlackMessageCustomData customData = new GhlSlackMessageCustomData();
         customData.setChannel(channelId);
-        customData.setMessage("Congrats to " + assignment.getUser().getName() + " for submitting assignment #" + assignment.getNumber() + ". " + HypeUpService.getHypeUpMessage());
+        customData.setMessage(message);
         request.setCustomData(customData);
-        
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        
+
         HttpEntity<GhlWebhookRequest> entity = new HttpEntity<>(request, headers);
-        
+
         rt.exchange("https://courses.coderscampus.com/ghl/slack-message", HttpMethod.POST, entity, String.class);
-        
     }
 
 }
