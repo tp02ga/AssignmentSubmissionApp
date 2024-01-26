@@ -91,10 +91,8 @@ public class AssignmentService {
         var droppedStudents = proffessoUserRepo.findDroppedBootcampStudents();
 
         Map<UserKeyDto, Set<Assignment>> allStudentAssignments = assignments.stream()
-                .filter(assignment -> !droppedStudents.stream()
-                        .filter(droppedStudent -> droppedStudent.getId().equals(assignment.getUser().getId()))
-                        .findAny()
-                        .isPresent())
+                .filter(assignment -> droppedStudents.stream()
+                        .noneMatch(droppedStudent -> droppedStudent.getId().equals(assignment.getUser().getId())))
                 .filter(a -> (a.getName() == null) || !a.getName().equals("Compounding Interest Calculator") && !a.getName().equals("Job Data Parsing & Filtering"))
                 .filter(a -> (a.getStatus() != null && !a.getStatus().equals(AssignmentStatusEnum.PENDING_SUBMISSION.getStatus())))
                 .collect(Collectors.groupingBy(a -> new UserKeyDto(a.getUser().getUsername(),
@@ -155,6 +153,7 @@ public class AssignmentService {
 
                 if (AssignmentStatusEnum.RESUBMITTED.getStatus().equalsIgnoreCase(newStatus)) {
                     newAssignment.setCodeReviewer(null);
+                    newAssignment.setResubmittedDate(LocalDateTime.now());
                     newAssignment = assignmentRepo.save(newAssignment);
                 }
             }

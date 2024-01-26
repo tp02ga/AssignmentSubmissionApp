@@ -207,6 +207,17 @@ const CodeReviewerDashboard = () => {
                               )
                             : "No submitted date"}
                         </p>
+                        {
+                          assignment.resubmittedDate ?
+                          (<p>
+                            <b>Resubmitted</b>:{" "}
+                            {
+                              moment(assignment.resubmittedDate).format("MMMM Do YYYY")
+                            }
+                          </p>) : <></>
+                        }
+                        
+                        
                       </Card.Text>
 
                       <Button
@@ -216,6 +227,15 @@ const CodeReviewerDashboard = () => {
                         }}
                       >
                         Claim
+                      </Button>
+                      <Button
+                        variant="primary"
+                        className="mt-2"
+                        onClick={() => {
+                          editReview(assignment);
+                        }}
+                      >
+                        View
                       </Button>
                     </Card.Body>
                   </Card>

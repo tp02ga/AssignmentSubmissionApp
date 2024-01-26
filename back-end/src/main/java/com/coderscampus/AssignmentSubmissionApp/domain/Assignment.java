@@ -21,6 +21,7 @@ public class Assignment {
     @ManyToOne
     private User codeReviewer;
     private LocalDateTime submittedDate;
+    private LocalDateTime resubmittedDate;
     private LocalDateTime createdDate;
     private LocalDateTime lastModified;
 
@@ -114,6 +115,14 @@ public class Assignment {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDateTime getResubmittedDate() {
+        return resubmittedDate;
+    }
+
+    public void setResubmittedDate(LocalDateTime resubmittedDate) {
+        this.resubmittedDate = resubmittedDate;
     }
 
     @Override
